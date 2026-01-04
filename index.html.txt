@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>全球冲突实时监测 - 独立评论版</title>
+    <style>
+        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 700px; margin: auto; }
+        
+        /* 新闻卡片 */
+        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 25px; overflow: hidden; }
+        .news-content { padding: 15px; border-left: 4px solid var(--accent); }
+        .news-meta { font-size: 12px; color: #8b949e; margin-bottom: 8px; }
+        
+        /* 评论区样式 */
+        .comment-section { background: #090c10; padding: 15px; border-top: 1px solid #30363d; }
+        .comment-list { font-size: 14px; margin-bottom: 10px; }
+        .comment-data { margin-bottom: 10px; border-bottom: 1px solid #21262d; padding-bottom: 5px; }
+        .comment-user { color: var(--blue); font-weight: bold; margin-right: 5px; }
+        .reply-btn { font-size: 11px; color: #8b949e; cursor: pointer; margin-left: 10px; }
+        .reply-btn:hover { color: var(--blue); }
+
+        /* 输入框 */
+        .input-group { display: flex; gap: 10px; margin-top: 10px; }
+        .comment-input { flex: 1; background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 4px; }
+        .send-btn { background: var(--blue); color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🛰️ 实时战况播报</h2>
+
+    <div class="news-item" id="news-1">
+        <div class="news-content">
+            <div class="news-meta">10分钟前 · 地区：东欧</div>
+            <strong>AI 简讯：</strong> 某港口城市遭遇无人机拦截，防空系统已启动。
+        </div>
+        <div class="comment-section">
+            <div class="comment-list" id="list-1">
+                <div class="comment-data"><span class="comment-user">张三:</span>情况属实吗？<span class="reply-btn" onclick="replyTo('张三', 1)">回复</span></div>
+            </div>
+            <div class="input-group">
+                <input type="text" id="input-1" class="comment-input" placeholder="发表你的看法...">
+                <button class="send-btn" onclick="postComment(1)">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="news-item" id="news-2">
+        <div class="news-content">
+            <div class="news-meta">25分钟前 · 地区：中东</div>
+            <strong>AI 简讯：</strong> 边境缓冲区发现不明装甲集群，联合调查组已介入。
+        </div>
+        <div class="comment-section">
+            <div class="comment-list" id="list-2">
+                <div class="comment-data"><span class="comment-user">李四:</span>当地撤离通道开启了吗？<span class="reply-btn" onclick="replyTo('李四', 2)">回复</span></div>
+            </div>
+            <div class="input-group">
+                <input type="text" id="input-2" class="comment-input" placeholder="发表你的看法...">
+                <button class="send-btn" onclick="postComment(2)">发送</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 发送评论的功能
+    function postComment(newsId) {
+        const input = document.getElementById('input-' + newsId);
+        const list = document.getElementById('list-' + newsId);
+        
+        if (input.value.trim() === "") return;
+
+        // 创建新评论节点
+        const newComment = document.createElement('div');
+        newComment.className = 'comment-data';
+        newComment.innerHTML = `<span class="comment-user">游客:</span>${input.value}<span class="reply-btn" onclick="replyTo('游客', ${newsId})">回复</span>`;
+        
+        list.appendChild(newComment);
+        input.value = ""; // 清空输入框
+    }
+
+    // 回复功能：点击回复自动填充 @用户名
+    function replyTo(username, newsId) {
+        const input = document.getElementById('input-' + newsId);
+        input.value = `@${username} `;
+        input.focus();
+    }
+</script>
+
+</body>
+</html>
