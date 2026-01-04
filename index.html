@@ -1,121 +1,102 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOTYO HYBRID MONITOR</title>
+    <title>KOTYO COMMAND CENTER v5.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #050505; color: #d4d4d4; font-family: ui-monospace, monospace; }
-        .exclusive-card { border-left: 4px solid #f85149; background: linear-gradient(90deg, #1a0a0a, #0f0f0f); }
-        .ai-card { border-left: 2px solid #262626; background: #0f0f0f; opacity: 0.8; }
-        .emergency-bar { background: repeating-linear-gradient(45deg, #b91c1c, #b91c1c 10px, #000 10px, #000 20px); }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .live-dot { animation: pulse 2s infinite; }
+        body { background-color: #050505; color: #d4d4d4; font-family: 'Courier New', Courier, monospace; overflow-x: hidden; }
+        /* 顶部动态斜纹条 */
+        .emergency-bar { 
+            background: repeating-linear-gradient(45deg, #b91c1c, #b91c1c 10px, #000 10px, #000 20px);
+            background-size: 200% 100%;
+            animation: move-stripes 20s linear infinite;
+        }
+        @keyframes move-stripes { from { background-position: 0 0; } to { background-position: 100% 0; } }
+        .exclusive-card { border-left: 4px solid #f85149; background: linear-gradient(90deg, #1a0a0a, #050505); }
+        .ai-card { border-left: 2px solid #222; background: #0a0a0a; border-bottom: 1px solid #111; }
+        
+        /* 雷达地图动画 */
+        .map-bg {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/World_map_blank_without_borders.svg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            filter: invert(1) brightness(0.5) sepia(1) saturate(5) hue-rotate(-50deg);
+        }
+        .radar-sweep {
+            position: absolute; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(248, 81, 73, 0.1) 50%, transparent);
+            animation: sweep 4s linear infinite;
+        }
+        @keyframes sweep { from { top: -100%; } to { top: 100%; } }
+        
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
     </style>
 </head>
 <body>
-    <div class="emergency-bar text-white py-1 px-4 text-[10px] font-bold flex justify-between uppercase italic">
-        <span>🚨 COMMAND CENTER: HYBRID FEED ACTIVE</span>
-        <span class="live-dot">● ENCRYPTED LINK</span>
+    <div id="google_translate_element" class="bg-black text-right pr-4 pt-1 opacity-50 hover:opacity-100 transition-opacity"></div>
+
+    <div class="emergency-bar text-white py-1.5 px-4 text-[10px] font-black flex justify-between uppercase italic tracking-widest shadow-2xl">
+        <span>🚨 STATUS: HYBRID SATELLITE INTERCEPT ACTIVE</span>
+        <span class="animate-pulse">● SECURE LINE CONNECTED</span>
     </div>
 
-    <header class="p-6 border-b border-neutral-800 flex justify-between items-center bg-black/90">
-        <h1 class="text-2xl font-black tracking-tighter uppercase">GLOBAL <span class="text-[#f85149]">MONITOR</span></h1>
-        <div class="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Station: KOTYO-ALPHA</div>
+    <header class="p-6 border-b border-neutral-900 flex justify-between items-center bg-black">
+        <h1 class="text-2xl font-black tracking-tighter uppercase italic">KOTYO <span class="text-[#f85149]">MONITOR</span></h1>
+        <div class="text-[9px] text-neutral-600 font-mono text-right">COORD: 35.6895° N, 139.6917° E<br>ACCESS: COMMANDER_LEVEL</div>
     </header>
 
     <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-8">
-            <div>
+        <div class="lg:col-span-2 space-y-10">
+            <section>
                 <div class="flex items-center gap-2 mb-4">
-                    <span class="text-red-500 font-bold text-xs uppercase tracking-widest">/ Exclusive Intel</span>
-                    <div class="h-[1px] flex-1 bg-red-900/30"></div>
+                    <span class="text-red-500 font-bold text-[10px] uppercase tracking-widest italic">/ Command Intel [Airtable]</span>
+                    <div class="h-[1px] flex-1 bg-red-900/20"></div>
                 </div>
-                <div id="airtable-feed" class="space-y-4">
-                    <div class="p-10 text-center text-neutral-800 text-xs animate-pulse">CONNECTING TO COMMANDER'S FEED...</div>
-                </div>
-            </div>
+                <div id="airtable-feed" class="space-y-4"></div>
+            </section>
 
-            <div>
+            <section>
                 <div class="flex items-center gap-2 mb-4">
-                    <span class="text-neutral-500 font-bold text-xs uppercase tracking-widest">/ Global AI Retrieval</span>
+                    <span class="text-neutral-500 font-bold text-[10px] uppercase tracking-widest italic">/ Global Real-time Stream</span>
                     <div class="h-[1px] flex-1 bg-neutral-800"></div>
                 </div>
                 <div id="ai-feed" class="space-y-4">
-                    <div class="p-10 text-center text-neutral-800 text-xs animate-pulse">SCANNING SATELLITE RSS...</div>
+                    <div class="p-20 text-center text-neutral-800 text-xs animate-pulse font-mono tracking-[0.5em]">SCANNING GLOBAL SECTORS...</div>
                 </div>
-            </div>
+            </section>
         </div>
 
         <aside class="space-y-6">
-            <div class="bg-neutral-900/50 p-5 rounded border border-neutral-800">
-                <h3 class="text-[10px] font-bold text-neutral-500 mb-4 uppercase italic">Status Report</h3>
-                <div class="text-[10px] space-y-3 font-mono">
-                    <div class="flex justify-between"><span>COMMANDER</span><span class="text-red-500">KOTYO</span></div>
-                    <div class="flex justify-between"><span>LINK STATUS</span><span class="text-green-500">STABLE</span></div>
-                    <div class="flex justify-between"><span>SOURCES</span><span class="text-white">MULTI-CHANNEL</span></div>
+            <div class="bg-neutral-900/30 border border-neutral-800 rounded relative overflow-hidden h-64">
+                <div class="map-bg absolute inset-0"></div>
+                <div class="radar-sweep"></div>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <div class="text-[8px] font-mono text-red-900 animate-pulse mb-2 text-center uppercase">Satellite Scanning<br>Sector 7-G Active</div>
+                    <div class="w-20 h-20 border border-red-900/30 rounded-full flex items-center justify-center animate-ping">
+                        <div class="w-2 h-2 bg-red-600 rounded-full"></div>
+                    </div>
+                </div>
+                <div class="absolute bottom-2 left-2 text-[8px] font-mono text-neutral-600 uppercase">LAT: 34.12 // LON: 118.24</div>
+            </div>
+
+            <div class="bg-neutral-900/30 p-5 border border-neutral-800 rounded">
+                <h3 class="text-[10px] font-bold text-neutral-600 mb-4 uppercase">System Link Status</h3>
+                <div class="text-[10px] space-y-2 font-mono">
+                    <div class="flex justify-between"><span>SATELLITE 1</span><span class="text-green-900">UP</span></div>
+                    <div class="flex justify-between"><span>SATELLITE 2</span><span class="text-green-900">UP</span></div>
+                    <div class="flex justify-between border-t border-neutral-800 pt-2 mt-2 font-bold"><span>THREAT LEVEL</span><span class="text-red-600 uppercase underline">Elevated</span></div>
                 </div>
             </div>
         </aside>
     </main>
 
-    <script>
-        // 配置你的 Airtable
-    const p1 = "patR3J9RQjyCdCKcN";
-const p2 = "c12832bf555d070c5b7c26130ada69e2c8b29b1c3ed990e176745682313fdc1b";
-const TOKEN = p1 + "." + p2;
-        const AIRTABLE_URL = "https://api.airtable.com/v0/app1bKpTNxXpFD9jK/Intelligence%20Entries";
-
-        // 1. 获取你的 Airtable 数据
-        async function fetchCommanderIntel() {
-            const container = document.getElementById('airtable-feed');
-            try {
-                const r = await fetch(AIRTABLE_URL, { headers: { Authorization: "Bearer " + TOKEN } });
-                const d = await r.json();
-                container.innerHTML = '';
-                d.records.forEach(item => {
-                    const f = item.fields;
-                    const div = document.createElement('div');
-                    div.className = "exclusive-card p-6 rounded shadow-2xl relative overflow-hidden transition-all";
-                    div.innerHTML = `
-                        <div class="text-[9px] text-red-500 font-bold mb-2 uppercase tracking-widest">● Exclusive Intel Received</div>
-                        <h3 class="text-xl font-bold text-white leading-snug">${f.Headline || f.title || 'STANDING BY...'}</h3>
-                    `;
-                    container.appendChild(div);
-                });
-            } catch (e) { container.innerHTML = "ERROR CONNECTING TO COMMANDER"; }
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
-
-        // 2. AI 自动获取全球新闻
-        async function fetchGlobalAI() {
-            const container = document.getElementById('ai-feed');
-            const rssUrl = encodeURIComponent('https://www.reutersagency.com/feed/?best-topics=world-news&post_type=best');
-            try {
-                const response = await fetch(`https://api.allorigins.win/get?url=${rssUrl}`);
-                const data = await response.json();
-                const parser = new DOMParser();
-                const xml = parser.parseFromString(data.contents, "text/xml");
-                const items = xml.querySelectorAll("item");
-                container.innerHTML = '';
-                items.forEach((item, i) => {
-                    if (i > 4) return;
-                    const div = document.createElement('div');
-                    div.className = "ai-card p-4 rounded transition-all grayscale hover:grayscale-0";
-                    div.innerHTML = `
-                        <div class="text-[9px] text-neutral-600 mb-1">AUTO_RETRIEVAL // SOURCE: REUTERS</div>
-                        <h4 class="text-sm font-bold text-neutral-400 leading-tight">${item.querySelector("title").textContent}</h4>
-                    `;
-                    container.appendChild(div);
-                });
-            } catch (e) { console.error("AI Retrieval Error"); }
-        }
-
-        // 执行
-        fetchCommanderIntel();
-        fetchGlobalAI();
-        setInterval(fetchCommanderIntel, 30000); // 30秒刷一次你的指令
-        setInterval(fetchGlobalAI, 300000);    // 5分钟刷一次AI新闻
     </script>
-</body>
-</html>
+    <script type="text/javascript" src="//
