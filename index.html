@@ -3,9 +3,9 @@
 <head><meta charset="UTF-8"></head>
 <body style="background:#000; color:#fff; font-family:sans-serif; text-align:center; padding-top:100px;">
     
-    <h1 style="color:red;">📡 情报站已通电</h1>
-    <div id="display" style="font-size:24px; border:2px solid #333; padding:20px; display:inline-block;">
-        连接中，请稍候...
+    <h1 style="color:#f85149;">📡 KOTYO 情报接收站</h1>
+    <div id="display" style="font-size:24px; border:1px solid #333; padding:30px; display:inline-block; border-radius:10px;">
+        正在连接卫星信号...
     </div>
 
     <script>
@@ -15,18 +15,20 @@
 
         async function getData() {
             try {
+                // 1. 尝试连接你改好的表格
                 const r = await fetch("https://api.airtable.com/v0/app1bKpTNxXpFD9jK/Intelligence%20Entries", {
                     headers: { Authorization: "Bearer " + TOKEN }
                 });
                 const d = await r.json();
                 
-                // 这一步最关键：它会自动找你填写的任何内容
+                // 2. 自动抓取你填写的任何内容（不看名字，只看内容）
                 const firstRecord = d.records[0].fields;
-                const anyContent = Object.values(firstRecord)[0] || "表格里还没写字";
+                const content = firstRecord.title || firstRecord.Headline || Object.values(firstRecord)[0] || "表格里还没填字哦";
                 
-                document.getElementById('display').innerHTML = "最新情报：" + anyContent;
+                document.getElementById('display').innerHTML = 
+                    `<span style="color:gray;font-size:14px;">最新情报：</span><br><br>` + content;
             } catch (e) {
-                document.getElementById('display').innerHTML = "配置还没对齐，休息一下吧";
+                document.getElementById('display').innerHTML = "配置正在同步，请刷新网页再试";
             }
         }
         getData();
