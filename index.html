@@ -3,70 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOBAL INTEL | OFFICIAL TERMINAL</title>
+    <title>GLOBAL INTEL | OFFICIAL MONITORING</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; --green: #2ea043; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; }
-        
-        /* 顶部警戒条 */
-        .ticker-bar { background: var(--accent); color: white; height: 30px; line-height: 30px; overflow: hidden; white-space: nowrap; font-size: 11px; font-weight: bold; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; }
+
+        /* 顶部警戒滚动条 */
+        .ticker-bar { background: var(--accent); color: white; height: 30px; line-height: 30px; overflow: hidden; white-space: nowrap; font-size: 11px; font-weight: bold; border-bottom: 2px solid #000; }
         .ticker-move { display: inline-block; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-        
-        /* 999.png 风格竖排翻译器 */
-        .v-lang-wrap { width: 85px; background: white; padding: 6px; border-radius: 4px; border: 2px solid var(--blue); }
+
+        /* 竖排翻译组件 - 还原 999.png */
+        .v-lang-wrap { width: 85px; background: white; padding: 6px; border-radius: 4px; border: 2px solid var(--blue); position: relative; z-index: 50; }
         .goog-te-gadget { color: transparent !important; font-size: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; }
-        .goog-te-combo { background: #fff !important; color: #333 !important; border: 1px solid #ccc !important; width: 75px !important; font-size: 11px !important; outline: none; }
-        
-        /* 24H Feed 样式 */
+        .goog-te-combo { background: #fff !important; color: #333 !important; border: 1px solid #ccc !important; width: 75px !important; font-size: 11px !important; outline: none; margin-top: 4px; }
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; position: static !important; }
+
+        /* 24H Feed 标题样式 */
         .feed-header { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; }
         .live-tag { border: 1.5px solid var(--green); color: var(--green); padding: 3px 12px; border-radius: 6px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
         .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* 新闻卡片 */
-        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 16px; }
+        /* 新闻卡片与首页统计 */
+        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 16px; transition: 0.2s; }
+        .news-item:hover { border-color: var(--blue); background: #1c2128; }
         .news-content { padding: 18px; border-left: 5px solid var(--accent); }
-        .stat-badge { background: #0d1117; padding: 4px 10px; border-radius: 4px; font-size: 11px; color: #8b949e; font-weight: bold; border: 1px solid #30363d; display: flex; align-items: center; gap: 5px; }
+        .stat-badge { background: #0d1117; padding: 4px 12px; border-radius: 4px; font-size: 11px; color: #8b949e; font-weight: bold; border: 1px solid #30363d; display: flex; align-items: center; gap: 5px; }
         .stat-badge b { color: var(--blue); }
 
-        /* 修复后的地图容器 */
-        #map { height: 300px; width: 100%; border-radius: 8px; background: #000; filter: invert(100%) hue-rotate(180deg) brightness(0.6) contrast(1.2); }
+        /* 雷达地图风格 */
+        #radar-map { height: 280px; width: 100%; border-radius: 8px; background: #000; filter: invert(100%) hue-rotate(180deg) brightness(0.7) contrast(1.2); }
     </style>
 </head>
 <body>
 
-<div class="ticker-bar"><div class="ticker-move">ESTABLISHING GLOBAL SATELLITE UPLINK... MAP DATA: VERIFIED... INTEL FEED: ACTIVE... </div></div>
+<div class="ticker-bar"><div class="ticker-move">[SECURE UPLINK] SYNCING GLOBAL OFFICIAL BROADCASTS // NODE: 0x219-INTEL // JAN 2026 // SECURITY: VERIFIED</div></div>
 
 <div class="max-w-7xl mx-auto p-6">
-    <header class="flex justify-between items-center mb-10 border-b border-gray-800 pb-8">
+    <header class="flex justify-between items-center mb-12 border-b border-gray-800 pb-10">
         <div>
-            <h1 class="text-4xl font-black italic tracking-tighter uppercase">GLOBAL <span class="text-[#f85149]">INTEL</span></h1>
-            <p class="text-[10px] text-gray-500 font-bold tracking-[0.4em] uppercase mt-2">Certified Monitoring Station</p>
+            <h1 class="text-5xl font-black italic tracking-tighter uppercase text-white">GLOBAL <span class="text-[#f85149]">INTEL</span></h1>
+            <p class="text-[10px] text-gray-500 font-black tracking-[0.5em] uppercase mt-2">Official Monitoring System</p>
         </div>
-        <div class="v-lang-wrap"><div id="google_translate_element"></div></div>
+        <div class="v-lang-wrap" id="lang-host">
+            <div id="google_translate_element"></div>
+        </div>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
         <div class="lg:col-span-8">
             <div class="feed-header">
-                <span class="text-2xl">🔥</span>
-                <h2 class="text-2xl font-black text-gray-100 uppercase">24H Global Intel Feed</h2>
+                <span class="text-3xl">🔥</span>
+                <h2 class="text-3xl font-black text-gray-100 uppercase tracking-tight">24H Global Intel Feed</h2>
                 <div class="live-tag"><div class="live-dot"></div> LIVE DISCUSSION</div>
             </div>
             <div id="news-feed" class="space-y-4">
-                <div class="py-20 text-center font-mono text-gray-600 animate-pulse uppercase">Syncing Intel...</div>
+                <div class="py-20 text-center font-mono text-gray-700 animate-pulse text-sm">SEARCHING FOR SECURE FREQUENCIES...</div>
             </div>
         </div>
 
         <div class="lg:col-span-4">
             <div class="bg-[#161b22] border border-[#30363d] p-4 rounded-xl mb-6 shadow-2xl">
-                <h3 class="text-[10px] text-gray-500 font-black mb-3 uppercase tracking-widest">Global Radar Scope</h3>
-                <div id="map"></div> </div>
-            <div class="bg-[#161b22] border border-[#30363d] p-6 rounded-xl text-xs font-mono space-y-3">
-                <div class="flex justify-between border-b border-gray-800 pb-2"><span>UPLINK</span><span class="text-green-500">ENCRYPTED</span></div>
-                <div class="flex justify-between"><span>LATENCY</span><span id="ping" class="text-blue-400">-- ms</span></div>
+                <h3 class="text-[10px] text-gray-500 font-black mb-4 uppercase tracking-widest">Global Radar Scope</h3>
+                <div id="radar-map"></div>
             </div>
+            <div class="bg-[#161b22] border border-[#30363d] p-6 rounded-xl text-xs font-mono space-y-4">
+                <div class="flex justify-between border-b border-gray-800 pb-2"><span>NETWORK</span><span class="text-green-500">ENCRYPTED</span></div>
+                <div class="flex justify-between text-gray-400"><span>STATUS</span><span id="ping-text" class="text-blue-400">SCANNING...</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. 初始化地图逻辑
+    function initMap() {
+        const map = L.map('radar-map', { zoomControl: false, attributionControl: false }).setView([20, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        const hotspots = [[34, 108], [40, -74], [51, 0], [35, 139], [-33, 151]];
+        hotspots.forEach(p => {
+            L.circleMarker(p, { color: '#f85149', radius: 4, fillOpacity: 0.9 }).addTo(map);
+        });
+    }
+
+    // 2. 官方新闻抓取逻辑 (全链路加速)
+    async function fetchIntel() {
+        const target = encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en');
+        const proxy = `https://corsproxy.io/?${target}`;
+        
+        try {
+            const start = Date.now();
+            const res = await fetch(proxy);
+            const text = await res.text();
+            
+            const xml = new DOMParser().parseFromString(text, "text/xml");
+            const items = xml.querySelectorAll("item");
+            
+            if (items.length > 0) {
+                document.getElementById('ping-text').innerText = (Date.now() - start) + "ms";
+                renderIntel(items);
+            }
+        } catch (e) {
+            document.getElementById('news-feed').innerHTML = '<div class="text-red-500 text-center font-mono py-10">UPLINK CONGESTED. RETRYING...</div>';
+            setTimeout(fetchIntel, 5000);
+        }
+    }
+
+    function renderIntel(items) {
+        let html = '';
+        Array.from(items).slice(0, 15).forEach(i => {
+            const rt = Math.floor(Math.random()*400) + 100;
+            const cm = Math.floor(Math.random()*200) + 50;
+            html += `
+                <div class="news-item">
+                    <div class="news-content">
+                        <div class="text-[9px] text-gray-500 font-black mb-3 uppercase border-b border-gray-800 pb-1">Verified Origin: ${i.querySelector('source')?.textContent || 'Global'}</div>
+                        <p onclick="window.open('${i.querySelector('link').textContent}', '_blank')" class="text-2xl font-bold text-gray-100 leading-tight mb-5 hover:text-blue-400 cursor-pointer transition-colors">${i.querySelector('title').textContent}</p>
+                        <div class="flex gap-4">
+                            <div class="stat-badge"><b>🔄 ${rt}</b> RT</div>
+                            <div class="stat-badge"><b>💬 ${cm}</b> REPLIES</div>
+                        </div>
+                    </div>
+                </div>`;
+        });
+        document.getElementById('news-feed').innerHTML = html;
+    }
+
+    // 3. 翻译组件
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+    }
+
+    // 启动
+    window.onload = () => {
+        initMap();
+        fetchIntel();
+    };
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
