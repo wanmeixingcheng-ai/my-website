@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOBAL MONITOR - Intelligence Engine v4.0</title>
+    <title>全球冲突实时监测 - 77777 还原版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
         
-        /* 顶部红色动态警戒条 */
+        /* 顶部紧急红色条 */
         .emergency-bar { 
             background: repeating-linear-gradient(45deg, #b91c1c, #b91c1c 10px, #000 10px, #000 20px);
             background-size: 200% 100%;
@@ -17,134 +17,149 @@
         }
         @keyframes move-stripes { from { background-position: 0 0; } to { background-position: 100% 0; } }
 
-        /* 新闻卡片: 还原截图中的深色风格 */
-        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 6px; margin-bottom: 25px; overflow: hidden; }
-        .news-content { padding: 20px; border-left: 4px solid var(--accent); }
-        .news-meta { font-size: 11px; color: #8b949e; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        /* 新闻卡片 */
+        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 25px; overflow: hidden; }
+        .news-content { padding: 15px; border-left: 4px solid var(--accent); }
+        .news-meta { font-size: 12px; color: #8b949e; margin-bottom: 8px; display: flex; justify-content: space-between; }
         
-        /* 语言标签和翻译 */
-        .lang-tag { background: #1f2937; color: #9ca3af; font-size: 10px; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
-        .translate-btn { color: var(--blue); font-size: 11px; cursor: pointer; text-decoration: underline; margin-left: 10px; }
-
-        /* 评论区 (保留你的原始逻辑) */
+        /* 评论区样式 (沿用你的逻辑) */
         .comment-section { background: #090c10; padding: 15px; border-top: 1px solid #30363d; }
-        .comment-data { font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+        .comment-list { font-size: 14px; margin-bottom: 10px; }
+        .comment-data { margin-bottom: 10px; border-bottom: 1px solid #21262d; padding-bottom: 5px; }
         .comment-user { color: var(--blue); font-weight: bold; margin-right: 5px; }
-        
-        /* 英文显示的社交计数 */
-        .social-stats { display: flex; gap: 15px; font-size: 11px; color: #8b949e; margin-top: 15px; font-weight: bold; font-family: monospace; }
+        .reply-btn { font-size: 11px; color: #8b949e; cursor: pointer; margin-left: 10px; }
+        .reply-btn:hover { color: var(--blue); }
 
-        /* 右侧地图 (还原截图) */
-        .sidebar-card { background: var(--card); border: 1px solid #30363d; border-radius: 6px; padding: 15px; margin-bottom: 20px; }
-        .map-box { border: 1px dashed #30363d; background: #0d1117; height: 200px; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        /* 输入框 */
+        .input-group { display: flex; gap: 10px; margin-top: 10px; }
+        .comment-input { flex: 1; background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 4px; font-size: 13px; }
+        .send-btn { background: var(--blue); color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+
+        /* 截图中的社交数据计数器 */
+        .social-stats { display: flex; gap: 15px; font-size: 11px; color: #8b949e; margin-top: 10px; font-weight: bold; }
+
+        /* 右侧地图与统计 */
+        .sidebar-card { background: var(--card); border: 1px solid #30363d; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        .map-box { border: 1px dashed #30363d; background: #0d1117; height: 180px; border-radius: 4px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .scan-line { position: absolute; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: scan 4s linear infinite; }
         @keyframes scan { from { top: 0; } to { top: 100%; } }
-        
-        /* 隐藏 Google 翻译原生条 */
+
+        /* 隐藏 Google 翻译多余 UI */
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; }
     </style>
 </head>
 <body>
 
-<div class="emergency-bar text-white py-1 px-4 text-[10px] font-bold flex justify-between uppercase italic tracking-widest shadow-2xl">
-    <span>[URGENT] GLOBAL MONITORING ACTIVE...</span>
-    <span class="animate-pulse">● SECURE SATELLITE FEED</span>
-</div>
+    <div class="emergency-bar text-white py-1.5 px-4 text-[10px] font-bold flex justify-between uppercase tracking-widest">
+        <span>🚨 SIGNAL ACQUIRED: GLOBAL MONITORING ACTIVE</span>
+        <span class="animate-pulse">● LIVE CONNECTION</span>
+    </div>
 
-<header class="p-6 max-w-7xl mx-auto flex justify-between items-end">
-    <h1 class="text-2xl font-black italic tracking-tighter">GLOBAL <span class="text-[#f85149]">MONITOR</span></h1>
-    <div id="google_translate_element"></div> </header>
+    <div class="max-w-[1200px] mx-auto p-6">
+        <header class="flex justify-between items-center mb-10">
+            <h1 class="text-2xl font-black italic tracking-tighter">GLOBAL <span class="text-[#f85149]">MONITOR</span></h1>
+            <div id="google_translate_element" class="opacity-60 hover:opacity-100"></div>
+        </header>
 
-<main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <div class="lg:col-span-8">
-        <h2 class="text-xl font-bold mb-6 flex items-center gap-2">🔥 24H Global Intel Feed <span class="text-[10px] text-green-500 font-mono animate-pulse">● LIVE</span></h2>
-        
-        <div id="dynamic-news-feed" class="space-y-6">
-            <div class="p-20 text-center font-mono text-gray-600 animate-pulse">SYNCING GLOBAL FREQUENCIES...</div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-8">
+                <h2 class="text-xl font-bold mb-6">🛰️ 实时战况播报</h2>
+                <div id="auto-news-feed" class="space-y-6">
+                    <div class="text-gray-600 animate-pulse">正在获取全球情报...</div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4">
+                <div class="sidebar-card">
+                    <h3 class="text-sm font-bold mb-4 uppercase">Global Stats</h3>
+                    <div class="text-xs space-y-2 font-mono">
+                        <div class="flex justify-between"><span>Active Sources</span><span class="text-gray-400">512</span></div>
+                        <div class="flex justify-between border-t border-gray-800 pt-2 font-bold text-red-500"><span>Threat Level</span><span>HIGH</span></div>
+                    </div>
+                </div>
+                <div class="sidebar-card">
+                    <h3 class="text-sm font-bold mb-4 uppercase">Situational Map</h3>
+                    <div class="map-box">
+                        <div class="scan-line"></div>
+                        <span class="text-[10px] text-gray-700 font-mono">Satellite Feed Active</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="lg:col-span-4">
-        <div class="sidebar-card">
-            <h3 class="text-sm font-bold mb-4 flex items-center gap-2">📊 Global Stats</h3>
-            <div class="text-[11px] space-y-2 font-mono">
-                <div class="flex justify-between"><span>Active Sources</span><span class="text-gray-400">512</span></div>
-                <div class="flex justify-between border-t border-gray-800 pt-2 font-bold text-red-500"><span>Threat Level</span><span>HIGH</span></div>
-            </div>
-        </div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'auto'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-        <div class="sidebar-card">
-            <h3 class="text-sm font-bold mb-4 flex items-center gap-2">📡 Situational Map</h3>
-            <div class="map-box">
-                <div class="scan-line"></div>
-                <div class="text-[10px] text-gray-600 font-mono text-center">Global Intel Map<br>Awaiting Satellite Feed...</div>
-            </div>
-        </div>
-    </div>
-</main>
-
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'auto', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-    }
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-<script>
-    // 自动抓取新闻函数 (多语言混合源)
-    async function fetchGlobalNews() {
-        const feedContainer = document.getElementById('dynamic-news-feed');
-        const rssUrl = encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en'); // 使用全球源
-        
-        try {
-            const response = await fetch(`https://api.allorigins.win/get?url=${rssUrl}`);
-            const data = await response.json();
-            const items = new DOMParser().parseFromString(data.contents, "text/xml").querySelectorAll("item");
-            
-            feedContainer.innerHTML = ''; // 清空加载提示
-            
-            items.forEach((item, i) => {
-                if (i > 8) return; // 只取前9条新闻
+    <script>
+        // 自动抓取新闻逻辑
+        async function fetchNews() {
+            const container = document.getElementById('auto-news-feed');
+            const rssUrl = encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en');
+            try {
+                const res = await fetch(`https://api.allorigins.win/get?url=${rssUrl}`);
+                const data = await res.json();
+                const parser = new DOMParser();
+                const items = parser.parseFromString(data.contents, "text/xml").querySelectorAll("item");
                 
-                // 模拟多语言标签
-                const langTags = ['ENG', 'JPN', 'RUS', 'CHN', 'FRA'];
-                const currentLang = langTags[i % langTags.length];
-                
-                const newsId = i;
-                const div = document.createElement('div');
-                div.className = "news-item";
-                div.innerHTML = `
-                    <div class="news-content">
-                        <div class="news-meta">
-                            <span>${Math.floor(Math.random()*60)} mins ago | ${item.querySelector("source")?.textContent || 'Reuters'}</span>
-                            <div>
-                                <span class="lang-tag">${currentLang}</span>
-                                <span class="translate-btn" onclick="window.scrollTo(0,0)">Translate</span>
+                container.innerHTML = '';
+                items.forEach((item, i) => {
+                    if (i > 6) return; // 取前7条
+                    const newsId = i;
+                    const div = document.createElement('div');
+                    div.className = "news-item";
+                    div.innerHTML = `
+                        <div class="news-content">
+                            <div class="news-meta">
+                                <span>${Math.floor(Math.random()*60)}分钟前 · 全球源</span>
+                                <span class="bg-[#1f2937] px-2 py-0.5 rounded text-[10px] font-bold">RAW</span>
+                            </div>
+                            <p class="text-[17px] font-bold text-white leading-snug">${item.querySelector("title").textContent}</p>
+                            <div class="social-stats">
+                                <span>💬 ${Math.floor(Math.random()*100) + 10} Comments</span>
+                                <span>🔄 ${Math.floor(Math.random()*50) + 5} Retweets</span>
                             </div>
                         </div>
-                        <p class="text-[17px] font-bold leading-snug text-white">${item.querySelector("title").textContent}</p>
-                        <div class="social-stats">
-                            <span>💬 ${Math.floor(Math.random()*100) + 15} Comments</span>
-                            <span>🔄 ${Math.floor(Math.random()*60) + 5} Retweets</span>
+                        <div class="comment-section">
+                            <div class="comment-list" id="list-${newsId}">
+                                <div class="comment-data"><span class="comment-user">System:</span> 监控中...<span class="reply-btn" onclick="replyTo('System', ${newsId})">回复</span></div>
+                            </div>
+                            <div class="input-group">
+                                <input type="text" id="input-${newsId}" class="comment-input" placeholder="发表看法...">
+                                <button class="send-btn" onclick="postComment(${newsId})">发送</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="comment-section">
-                        <div class="comment-list" id="list-${newsId}">
-                            <div class="comment-data"><span class="comment-user">System:</span> 安全线路已建立。</div>
-                        </div>
-                        <div class="flex gap-2 mt-4">
-                            <input type="text" id="input-${newsId}" class="flex-1 bg-[#0d1117] border border-[#30363d] text-white p-2 rounded text-sm" placeholder="发表评论...">
-                            <button class="bg-[#58a6ff] text-white px-4 py-1 rounded text-sm font-bold" onclick="postComment(${newsId})">发送</button>
-                        </div>
-                    </div>
-                `;
-                feedContainer.appendChild(div);
-            });
-        } catch (e) {
-            feedContainer.innerHTML = "信号中断 (SYNC ERROR)";
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (e) { container.innerHTML = "抓取失败"; }
         }
-    }
 
-    // 评论逻辑 (保留你的原始功能)
-    function postComment(newsId) {
+        // 你的原始评论功能
+        function postComment(newsId) {
+            const input = document.getElementById('input-' + newsId);
+            const list = document.getElementById('list-' + newsId);
+            if (input.value.trim() === "") return;
+            const newComment = document.createElement('div');
+            newComment.className = 'comment-data';
+            newComment.innerHTML = `<span class="comment-user">游客:</span>${input.value}<span class="reply-btn" onclick="replyTo('游客', ${newsId})">回复</span>`;
+            list.appendChild(newComment);
+            input.value = "";
+        }
+
+        function replyTo(username, newsId) {
+            const input = document.getElementById('input-' + newsId);
+            input.value = `@${username} `;
+            input.focus();
+        }
+
+        fetchNews();
+        setInterval(fetchNews, 300000); // 5分钟自动抓取一次
+    </script>
+</body>
+</html>
