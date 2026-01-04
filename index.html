@@ -2,93 +2,104 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>全球冲突实时监测 - 独立评论版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Global Intel Monitor</title>
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-        .container { max-width: 700px; margin: auto; }
+        /* 核心版式强制锁定 */
+        :root { --bg: #0d1117; --card: #161b22; --red: #f85149; --blue: #58a6ff; --text: #c9d1d9; --gray: #8b949e; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, system-ui, sans-serif; height: 100vh; overflow: hidden; }
         
-        /* 新闻卡片 */
-        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 25px; overflow: hidden; }
-        .news-content { padding: 15px; border-left: 4px solid var(--accent); }
-        .news-meta { font-size: 12px; color: #8b949e; margin-bottom: 8px; }
-        
-        /* 评论区样式 */
-        .comment-section { background: #090c10; padding: 15px; border-top: 1px solid #30363d; }
-        .comment-list { font-size: 14px; margin-bottom: 10px; }
-        .comment-data { margin-bottom: 10px; border-bottom: 1px solid #21262d; padding-bottom: 5px; }
-        .comment-user { color: var(--blue); font-weight: bold; margin-right: 5px; }
-        .reply-btn { font-size: 11px; color: #8b949e; cursor: pointer; margin-left: 10px; }
-        .reply-btn:hover { color: var(--blue); }
+        /* 顶部红色滚动条 */
+        .ticker { background: var(--red); color: white; padding: 8px; font-size: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; }
+        .ticker-inner { display: inline-block; animation: move 30s linear infinite; }
+        @keyframes move { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
 
-        /* 输入框 */
-        .input-group { display: flex; gap: 10px; margin-top: 10px; }
-        .comment-input { flex: 1; background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 4px; }
-        .send-btn { background: var(--blue); color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; }
+        /* 导航 */
+        nav { background: #000; padding: 15px 20px; border-bottom: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; }
+
+        /* 主体布局 */
+        .container { display: flex; height: calc(100vh - 100px); max-width: 1400px; margin: 0 auto; width: 100%; }
+        
+        /* 左侧新闻流 */
+        .feed { flex: 7; overflow-y: auto; padding: 20px; border-right: 1px solid #30363d; -webkit-overflow-scrolling: touch; }
+        
+        /* 右侧侧边栏 */
+        .sidebar { flex: 3; padding: 20px; background: #090c10; display: block; }
+        @media (max-width: 768px) { .sidebar { display: none; } } /* 手机端自动隐藏侧边栏 */
+
+        /* 卡片设计 */
+        .card { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--red); transition: 0.3s; }
+        .card-inner { padding: 15px; }
+        .meta { font-size: 11px; color: var(--gray); display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .btn-trans { color: var(--blue); cursor: pointer; font-size: 11px; text-decoration: underline; }
+
+        /* 互动区英文 */
+        .actions { background: rgba(0,0,0,0.2); padding: 10px 15px; border-top: 1px solid #30363d; display: flex; gap: 20px; font-size: 12px; color: var(--gray); }
+        
+        /* 侧边小框 */
+        .side-item { background: var(--card); border: 1px solid #30363d; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
+<div class="ticker"><div class="ticker-inner">🚨 BREAKING: GLOBAL SIGNAL INTERFERENCE DETECTED... SATELLITE FEED ACTIVE... THREAT LEVEL: HIGH...</div></div>
+
+<nav>
+    <div style="font-weight:bold; font-size:18px;">GLOBAL <span style="color:var(--red)">MONITOR</span></div>
+    <div style="color:var(--gray); font-size:12px;">Intel v4.2</div>
+</nav>
+
 <div class="container">
-    <h2>🛰️ 实时战况播报</h2>
+    <main class="feed">
+        <div class="card">
+            <div class="card-inner">
+                <div class="meta"><span>3m ago | Reuters</span><div><span style="color:var(--blue)">ENG</span> <span class="btn-trans" onclick="tr(1)">Translate</span></div></div>
+                <p id="p1" data-o="Unusual heavy armor movements detected near the eastern corridor. AI predicts 80% deployment probability.">Unusual heavy armor movements detected near the eastern corridor. AI predicts 80% deployment probability.</p>
+            </div>
+            <div class="actions"><span>💬 42 Comments</span><span>🔄 18 Retweets</span></div>
+        </div>
 
-    <div class="news-item" id="news-1">
-        <div class="news-content">
-            <div class="news-meta">10分钟前 · 地区：东欧</div>
-            <strong>AI 简讯：</strong> 某港口城市遭遇无人机拦截，防空系统已启动。
-        </div>
-        <div class="comment-section">
-            <div class="comment-list" id="list-1">
-                <div class="comment-data"><span class="comment-user">张三:</span>情况属实吗？<span class="reply-btn" onclick="replyTo('张三', 1)">回复</span></div>
+        <div class="card" style="border-left-color: var(--blue);">
+            <div class="card-inner">
+                <div class="meta"><span>12m ago | TASS</span><div><span style="color:var(--blue)">RUS</span> <span class="btn-trans" onclick="tr(2)">Translate</span></div></div>
+                <p id="p2" data-o="Срочно: Сообщается об отключении электроэнергии в приграничных районах.">Срочно: Сообщается об отключении электроэнергии в приграничных районах.</p>
             </div>
-            <div class="input-group">
-                <input type="text" id="input-1" class="comment-input" placeholder="发表你的看法...">
-                <button class="send-btn" onclick="postComment(1)">发送</button>
-            </div>
+            <div class="actions"><span>💬 15 Comments</span><span>🔄 4 Retweets</span></div>
         </div>
-    </div>
 
-    <div class="news-item" id="news-2">
-        <div class="news-content">
-            <div class="news-meta">25分钟前 · 地区：中东</div>
-            <strong>AI 简讯：</strong> 边境缓冲区发现不明装甲集群，联合调查组已介入。
-        </div>
-        <div class="comment-section">
-            <div class="comment-list" id="list-2">
-                <div class="comment-data"><span class="comment-user">李四:</span>当地撤离通道开启了吗？<span class="reply-btn" onclick="replyTo('李四', 2)">回复</span></div>
+        <div class="card" style="border-left-color: #fff;">
+            <div class="card-inner">
+                <div class="meta"><span>25m ago | Xinhua</span><span style="color:var(--blue)">CHN</span></div>
+                <p>快讯：亚太地区多处导航基站报告信号波动，原因正在调查中。</p>
             </div>
-            <div class="input-group">
-                <input type="text" id="input-2" class="comment-input" placeholder="发表你的看法...">
-                <button class="send-btn" onclick="postComment(2)">发送</button>
-            </div>
+            <div class="actions"><span>💬 156 Comments</span><span>🔄 28 Retweets</span></div>
         </div>
-    </div>
+    </main>
+
+    <aside class="sidebar">
+        <div class="side-item">
+            <h4 style="margin:0 0 10px 0">📊 Status Board</h4>
+            <div style="font-size:13px;">Active Hotspots: <span style="color:var(--red)">5</span></div>
+            <div style="font-size:13px; margin-top:5px;">System: <span style="color:var(--green)">Online</span></div>
+        </div>
+        <div class="side-item">
+            <h4 style="margin:0 0 10px 0">🛰️ Live Map</h4>
+            <div style="height:120px; background:#1b1b1f; border-radius:4px; display:flex; align-items:center; justify-content:center; color:#444; font-size:12px;">Map Feed Encrypted</div>
+        </div>
+    </aside>
 </div>
 
 <script>
-    // 发送评论的功能
-    function postComment(newsId) {
-        const input = document.getElementById('input-' + newsId);
-        const list = document.getElementById('list-' + newsId);
-        
-        if (input.value.trim() === "") return;
-
-        // 创建新评论节点
-        const newComment = document.createElement('div');
-        newComment.className = 'comment-data';
-        newComment.innerHTML = `<span class="comment-user">游客:</span>${input.value}<span class="reply-btn" onclick="replyTo('游客', ${newsId})">回复</span>`;
-        
-        list.appendChild(newComment);
-        input.value = ""; // 清空输入框
-    }
-
-    // 回复功能：点击回复自动填充 @用户名
-    function replyTo(username, newsId) {
-        const input = document.getElementById('input-' + newsId);
-        input.value = `@${username} `;
-        input.focus();
+    function tr(id) {
+        const p = document.getElementById('p' + id);
+        const btn = p.parentElement.querySelector('.btn-trans');
+        const dict = { 1: "突发：东部走廊附近探测到异常重型装甲移动。AI 预测部署概率为 80%。", 2: "紧急：据报告边境地区出现停电。" };
+        if(p.innerText === p.getAttribute('data-o')) {
+            p.innerText = dict[id]; btn.innerText = "Original";
+        } else {
+            p.innerText = p.getAttribute('data-o'); btn.innerText = "Translate";
+        }
     }
 </script>
-
 </body>
 </html>
