@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head><meta charset="UTF-8"></head>
 <body style="background:#000; color:#fff; font-family:sans-serif; text-align:center; padding-top:100px;">
     
     <h1 style="color:#f85149;">📡 KOTYO 情报接收站</h1>
-    <div id="display" style="font-size:24px; border:1px solid #333; padding:30px; display:inline-block; border-radius:10px;">
+    <div id="display" style="font-size:24px; border:1px solid #333; padding:30px; display:inline-block; border-radius:10px; min-width:300px;">
         正在连接卫星信号...
     </div>
 
@@ -15,20 +15,20 @@
 
         async function getData() {
             try {
-                // 1. 尝试连接你改好的表格
+                // 访问你截图里的那个表名
                 const r = await fetch("https://api.airtable.com/v0/app1bKpTNxXpFD9jK/Intelligence%20Entries", {
                     headers: { Authorization: "Bearer " + TOKEN }
                 });
                 const d = await r.json();
                 
-                // 2. 自动抓取你填写的任何内容（不看名字，只看内容）
-                const firstRecord = d.records[0].fields;
-                const content = firstRecord.title || firstRecord.Headline || Object.values(firstRecord)[0] || "表格里还没填字哦";
+                // 这里的逻辑：优先找你改的 title，找不到就抓第一个格子的内容
+                const record = d.records[0].fields;
+                const result = record.title || record.Headline || Object.values(record)[0] || "表格里还没填字";
                 
                 document.getElementById('display').innerHTML = 
-                    `<span style="color:gray;font-size:14px;">最新情报：</span><br><br>` + content;
+                    `<span style="color:gray;font-size:14px;">最新情报：</span><br><br>` + result;
             } catch (e) {
-                document.getElementById('display').innerHTML = "配置正在同步，请刷新网页再试";
+                document.getElementById('display').innerHTML = "连接中，请稍后刷新网页";
             }
         }
         getData();
