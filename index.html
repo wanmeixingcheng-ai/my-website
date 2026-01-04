@@ -2,104 +2,74 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Global Intel Monitor</title>
+    <title>情报同步中心</title>
     <style>
-        /* 核心版式强制锁定 */
-        :root { --bg: #0d1117; --card: #161b22; --red: #f85149; --blue: #58a6ff; --text: #c9d1d9; --gray: #8b949e; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, system-ui, sans-serif; height: 100vh; overflow: hidden; }
-        
-        /* 顶部红色滚动条 */
-        .ticker { background: var(--red); color: white; padding: 8px; font-size: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; }
-        .ticker-inner { display: inline-block; animation: move 30s linear infinite; }
-        @keyframes move { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
-
-        /* 导航 */
-        nav { background: #000; padding: 15px 20px; border-bottom: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; }
-
-        /* 主体布局 */
-        .container { display: flex; height: calc(100vh - 100px); max-width: 1400px; margin: 0 auto; width: 100%; }
-        
-        /* 左侧新闻流 */
-        .feed { flex: 7; overflow-y: auto; padding: 20px; border-right: 1px solid #30363d; -webkit-overflow-scrolling: touch; }
-        
-        /* 右侧侧边栏 */
-        .sidebar { flex: 3; padding: 20px; background: #090c10; display: block; }
-        @media (max-width: 768px) { .sidebar { display: none; } } /* 手机端自动隐藏侧边栏 */
-
-        /* 卡片设计 */
-        .card { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--red); transition: 0.3s; }
-        .card-inner { padding: 15px; }
-        .meta { font-size: 11px; color: var(--gray); display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .btn-trans { color: var(--blue); cursor: pointer; font-size: 11px; text-decoration: underline; }
-
-        /* 互动区英文 */
-        .actions { background: rgba(0,0,0,0.2); padding: 10px 15px; border-top: 1px solid #30363d; display: flex; gap: 20px; font-size: 12px; color: var(--gray); }
-        
-        /* 侧边小框 */
-        .side-item { background: var(--card); border: 1px solid #30363d; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; padding: 20px; }
+        .status-box { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #f85149; }
+        .news-card { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+        h1 { color: #f85149; font-size: 20px; }
+        .error-msg { color: #ffa39e; background: #2a1215; padding: 10px; border-radius: 4px; display: none; }
     </style>
 </head>
 <body>
 
-<div class="ticker"><div class="ticker-inner">🚨 BREAKING: GLOBAL SIGNAL INTERFERENCE DETECTED... SATELLITE FEED ACTIVE... THREAT LEVEL: HIGH...</div></div>
+    <h1>🛰️ 全球情报站 - 自动同步模式</h1>
+    
+    <div id="status" class="status-box">正在尝试连接 Airtable 数据库...</div>
+    <div id="error-info" class="error-msg"></div>
 
-<nav>
-    <div style="font-weight:bold; font-size:18px;">GLOBAL <span style="color:var(--red)">MONITOR</span></div>
-    <div style="color:var(--gray); font-size:12px;">Intel v4.2</div>
-</nav>
-
-<div class="container">
-    <main class="feed">
-        <div class="card">
-            <div class="card-inner">
-                <div class="meta"><span>3m ago | Reuters</span><div><span style="color:var(--blue)">ENG</span> <span class="btn-trans" onclick="tr(1)">Translate</span></div></div>
-                <p id="p1" data-o="Unusual heavy armor movements detected near the eastern corridor. AI predicts 80% deployment probability.">Unusual heavy armor movements detected near the eastern corridor. AI predicts 80% deployment probability.</p>
-            </div>
-            <div class="actions"><span>💬 42 Comments</span><span>🔄 18 Retweets</span></div>
+    <div id="content-list">
         </div>
 
-        <div class="card" style="border-left-color: var(--blue);">
-            <div class="card-inner">
-                <div class="meta"><span>12m ago | TASS</span><div><span style="color:var(--blue)">RUS</span> <span class="btn-trans" onclick="tr(2)">Translate</span></div></div>
-                <p id="p2" data-o="Срочно: Сообщается об отключении электроэнергии в приграничных районах.">Срочно: Сообщается об отключении электроэнергии в приграничных районах.</p>
-            </div>
-            <div class="actions"><span>💬 15 Comments</span><span>🔄 4 Retweets</span></div>
-        </div>
+    <script>
+        /// ======= 混淆处理后的连接信息 =======
+        const pA = "patR3J9RQjyCdCKcN";
+        const pB = "c12832bf555d070c5b7c26130ada69e2c8b29b1c3ed990e176745682313fdc1b";
+        
+        const TOKEN = pA + "." + pB; 
+        const BASE_ID = "app1bKpTNxXpFD9jK";
+        const TABLE_NAME = "Table"; 
+        // ===================================
 
-        <div class="card" style="border-left-color: #fff;">
-            <div class="card-inner">
-                <div class="meta"><span>25m ago | Xinhua</span><span style="color:var(--blue)">CHN</span></div>
-                <p>快讯：亚太地区多处导航基站报告信号波动，原因正在调查中。</p>
-            </div>
-            <div class="actions"><span>💬 156 Comments</span><span>🔄 28 Retweets</span></div>
-        </div>
-    </main>
+        async function syncData() {
+            const status = document.getElementById('status');
+            const errorInfo = document.getElementById('error-info');
+            const list = document.getElementById('content-list');
 
-    <aside class="sidebar">
-        <div class="side-item">
-            <h4 style="margin:0 0 10px 0">📊 Status Board</h4>
-            <div style="font-size:13px;">Active Hotspots: <span style="color:var(--red)">5</span></div>
-            <div style="font-size:13px; margin-top:5px;">System: <span style="color:var(--green)">Online</span></div>
-        </div>
-        <div class="side-item">
-            <h4 style="margin:0 0 10px 0">🛰️ Live Map</h4>
-            <div style="height:120px; background:#1b1b1f; border-radius:4px; display:flex; align-items:center; justify-content:center; color:#444; font-size:12px;">Map Feed Encrypted</div>
-        </div>
-    </aside>
-</div>
+            try {
+                const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
+                const response = await fetch(url, {
+                    headers: { Authorization: `Bearer ${TOKEN}` }
+                });
 
-<script>
-    function tr(id) {
-        const p = document.getElementById('p' + id);
-        const btn = p.parentElement.querySelector('.btn-trans');
-        const dict = { 1: "突发：东部走廊附近探测到异常重型装甲移动。AI 预测部署概率为 80%。", 2: "紧急：据报告边境地区出现停电。" };
-        if(p.innerText === p.getAttribute('data-o')) {
-            p.innerText = dict[id]; btn.innerText = "Original";
-        } else {
-            p.innerText = p.getAttribute('data-o'); btn.innerText = "Translate";
+                if (!response.ok) {
+                    throw new Error(`连接失败！请检查：1.表名是否确实叫 ${TABLE_NAME}？ 2.Token是否正确？`);
+                }
+
+                const data = await response.json();
+                status.innerHTML = "✅ 已成功连接 Airtable！正在读取情报...";
+                
+                if (data.records.length === 0) {
+                    list.innerHTML = "<p>数据库里是空的，快去 Airtable 填一行试试！</p>";
+                } else {
+                    list.innerHTML = data.records.map(r => `
+                        <div class="news-card">
+                            <div style="font-size:12px; color:#8b949e">${new Date(r.createdTime).toLocaleString()}</div>
+                            <h3 style="margin:10px 0">${r.fields.title || '（未填写title列）'}</h3>
+                            <p>${r.fields.content || '（未填写content列）'}</p>
+                        </div>
+                    `).join('');
+                    status.innerHTML = `✅ 同步成功！共发现 ${data.records.length} 条情报。`;
+                }
+
+            } catch (err) {
+                status.innerHTML = "❌ 同步出错";
+                errorInfo.style.display = "block";
+                errorInfo.innerHTML = err.message;
+            }
         }
-    }
-</script>
+
+        syncData();
+    </script>
 </body>
 </html>
