@@ -3,46 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOBAL INTEL | STRATEGIC TERMINAL</title>
+    <title>GLOBAL INTEL | FULL COMMAND</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; --green: #2ea043; --orange: #f97316; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; }
-
-        /* 顶部警戒滚动条 */
-        .ticker-bar { background: var(--accent); color: white; height: 30px; line-height: 30px; overflow: hidden; white-space: nowrap; font-size: 11px; font-weight: bold; border-bottom: 2px solid #000; }
-        .ticker-move { display: inline-block; animation: scroll 40s linear infinite; }
-        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-
-        /* 999.png 风格竖排翻译器 */
-        .v-lang-wrap { width: 85px; background: white; padding: 6px; border-radius: 4px; border: 2px solid var(--blue); position: relative; z-index: 50; }
-        .goog-te-gadget { color: transparent !important; font-size: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; }
-        .goog-te-combo { background: #fff !important; color: #333 !important; border: 1px solid #ccc !important; width: 75px !important; font-size: 11px !important; outline: none; margin-top: 4px; }
-
-        /* 侧边挂件统一样式 */
-        .side-widget { background: var(--card); border: 1px solid #30363d; padding: 16px; margin-bottom: 16px; border-radius: 12px; }
-        .widget-title { font-size: 10px; color: #8b949e; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 15px; border-left: 3px solid var(--blue); padding-left: 10px; display: flex; justify-content: space-between; }
+        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; --green: #2ea043; --gold: #f2a900; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; }
         
-        /* 数据行样式 */
-        .data-row { display: flex; justify-content: space-between; align-items: center; background: #0d1117; padding: 8px 12px; rounded-lg: 6px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #21262d; font-family: 'Monaco', monospace; font-size: 11px; }
-        .trend-up { color: var(--green); }
-        .trend-down { color: var(--accent); }
+        /* 翻译器固定 */
+        .v-lang-wrap { width: 85px; background: white; padding: 6px; border-radius: 4px; border: 2px solid var(--blue); position: relative; z-index: 100; }
+        .goog-te-gadget { color: transparent !important; font-size: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; }
+        .goog-te-combo { background: #fff !important; color: #333 !important; border: 1px solid #ccc !important; width: 75px !important; font-size: 11px !important; outline: none; }
 
-        /* 雷达地图 */
-        #radar-map { height: 180px; width: 100%; border-radius: 8px; background: #000; filter: invert(100%) hue-rotate(180deg) brightness(0.6) contrast(1.2); }
-
-        /* 弹窗层 */
+        /* 弹窗高级样式 */
         #detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; backdrop-filter: blur(10px); }
         .detail-modal { background: var(--card); max-width: 900px; margin: 1.5% auto; height: 92vh; border: 1px solid #444; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; }
+        .chat-panel { background: #090c10; border-top: 1px solid #30363d; padding: 20px; }
+        .stat-btn { background: #0d1117; padding: 8px 16px; border-radius: 6px; border: 1px solid #30363d; cursor: pointer; transition: 0.2s; font-size: 12px; font-weight: bold; }
+        .stat-btn:hover { border-color: var(--blue); color: var(--blue); }
 
+        /* 通用样式 */
+        .side-widget { background: var(--card); border: 1px solid #30363d; padding: 16px; margin-bottom: 16px; border-radius: 12px; }
+        .data-row { display: flex; justify-content: space-between; align-items: center; background: #0d1117; padding: 8px 12px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #21262d; font-family: monospace; font-size: 11px; }
+        #radar-map { height: 180px; width: 100%; border-radius: 8px; filter: invert(100%) hue-rotate(180deg) brightness(0.6); }
+        .ticker-bar { background: var(--accent); color: white; height: 30px; line-height: 30px; overflow: hidden; white-space: nowrap; font-size: 11px; font-weight: bold; }
+        .ticker-move { display: inline-block; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
     </style>
 </head>
 <body>
 
-<div class="ticker-bar"><div class="ticker-move">[STRATEGIC ALERT] CRUDE OIL PRICES VOLATILE // BTC STABILIZING AT $95K // NATO SURVEILLANCE ACTIVE // RE-ROUTING SECURE DATA NODES...</div></div>
+<div class="ticker-bar"><div class="ticker-move">[LIVE UPLINK] COMM CHANNELS OPEN // ENCRYPTED CHAT ACTIVE // MONITORING GLOBAL COMMODITIES...</div></div>
 
 <div class="max-w-7xl mx-auto p-6">
     <header class="flex justify-between items-center mb-10 border-b border-gray-800 pb-10">
@@ -55,52 +47,23 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-7">
-            <div class="flex items-center gap-4 mb-6">
-                <span class="text-3xl">📡</span>
-                <h2 class="text-3xl font-black text-white uppercase tracking-tight">24H Intel Stream</h2>
-                <div class="border border-red-500 text-red-500 px-3 py-1 rounded text-[10px] font-black animate-pulse">LIVE DECRYPTING</div>
-            </div>
-            <div id="news-feed" class="space-y-4">
-                <div class="py-20 text-center font-mono text-gray-700 animate-pulse uppercase">Intercepting Uplink...</div>
-            </div>
+            <h2 class="text-2xl font-black mb-6 flex items-center gap-3">📡 24H INTEL STREAM <span class="text-xs bg-red-600 px-2 py-0.5 animate-pulse">LIVE</span></h2>
+            <div id="news-feed" class="space-y-4"></div>
         </div>
 
         <div class="lg:col-span-5 space-y-4">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="side-widget">
-                    <h3 class="widget-title">ENERGY ASSETS <span class="text-orange-500">●</span></h3>
-                    <div id="energy-list">
-                        <div class="data-row"><span>WTI CRUDE</span><span class="text-white font-bold">$74.12</span></div>
-                        <div class="data-row"><span>BRENT OIL</span><span class="text-white font-bold">$78.45</span></div>
-                        <div class="data-row"><span>NATURAL GAS</span><span class="text-green-400 font-bold">2.341</span></div>
-                    </div>
-                </div>
-
-                <div class="side-widget">
-                    <h3 class="widget-title">FOREX INDEX <span class="text-blue-500">●</span></h3>
-                    <div class="data-row"><span>USD / CNY</span><span class="text-blue-400 font-bold">7.234</span></div>
-                    <div class="data-row"><span>EUR / USD</span><span class="text-green-500 font-bold">1.085</span></div>
-                    <div class="data-row"><span>GOLD (OZ)</span><span class="text-yellow-500 font-bold">2,042.1</span></div>
-                </div>
-            </div>
-
             <div class="side-widget">
-                <h3 class="widget-title">CRYPTO RADAR (LIVE) <span id="crypto-status" class="text-green-500">SYNCED</span></h3>
-                <div id="crypto-list" class="grid grid-cols-2 gap-2">
-                    <div class="animate-pulse text-gray-700 text-[10px] py-4">Connecting to Blockchain...</div>
-                </div>
+                <h3 class="text-[10px] text-gray-500 font-black mb-4 uppercase tracking-widest border-l-2 border-blue-500 pl-2">Real-time Energy</h3>
+                <div id="energy-list"></div>
             </div>
-
             <div class="side-widget">
-                <h3 class="widget-title">GLOBAL RADAR SCOPE</h3>
+                <h3 class="text-[10px] text-gray-500 font-black mb-4 uppercase tracking-widest border-l-2 border-blue-500 pl-2">Crypto Radar</h3>
+                <div id="crypto-list" class="grid grid-cols-2 gap-2"></div>
+            </div>
+            <div class="side-widget">
+                <h3 class="text-[10px] text-gray-500 font-black mb-4 uppercase tracking-widest border-l-2 border-blue-500 pl-2">Satellite View</h3>
                 <div id="radar-map"></div>
-                <div class="mt-4 flex justify-between text-[9px] font-mono text-gray-600">
-                    <span>COORDS: 35.6895° N, 139.6917° E</span>
-                    <span>SIGNAL: STRONG</span>
-                </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -108,10 +71,29 @@
 <div id="detail-overlay">
     <div class="detail-modal">
         <div class="p-5 bg-[#0d1117] border-b border-gray-800 flex justify-between items-center">
-            <button onclick="closeModal()" class="text-xs text-blue-500 font-bold hover:text-white uppercase">← Back to Command</button>
+            <button onclick="closeModal()" class="text-xs text-blue-500 font-bold hover:text-white uppercase">← BACK TO FEED</button>
             <div id="modal-lang-mount"></div>
         </div>
-        <div class="p-10 flex-1 overflow-y-auto" id="modal-body"></div>
+        <div class="p-10 flex-1 overflow-y-auto">
+            <div id="modal-body"></div>
+            
+            <div class="mt-10 pt-8 border-t border-gray-800 flex gap-6">
+                <div class="stat-btn" onclick="boostRT()">🔄 RETWEET <span id="m-rt" class="ml-2 text-blue-400">0</span></div>
+                <div class="stat-btn" onclick="boostLike()">❤️ LIKE <span id="m-like" class="ml-2 text-red-500">0</span></div>
+            </div>
+
+            <div class="mt-8">
+                <h4 class="text-[10px] text-gray-500 font-bold uppercase mb-4 tracking-widest">Encrypted Comments</h4>
+                <div id="chat-stream" class="space-y-3 font-mono text-xs"></div>
+            </div>
+        </div>
+        
+        <div class="chat-panel">
+            <div class="flex gap-4">
+                <input type="text" id="chat-input" class="flex-1 bg-[#0d1117] border border-[#30363d] text-white p-3 rounded-lg text-sm outline-none focus:border-blue-500" placeholder="Post your intel...">
+                <button onclick="sendMsg()" class="bg-blue-600 hover:bg-blue-500 px-6 font-bold text-xs rounded-lg uppercase transition-all">Transmit</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -119,16 +101,13 @@
     let newsItems = [];
     const langEl = document.getElementById('google_translate_element');
 
-    // 1. 地图初始化
+    // 地图与数据逻辑
     function initMap() {
         const map = L.map('radar-map', { zoomControl: false, attributionControl: false }).setView([20, 10], 2);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        [[34, 108], [40, -74], [51, 0], [35, 139], [-33, 151], [25, 45]].forEach(p => 
-            L.circleMarker(p, { color: '#f85149', radius: 4, fillOpacity: 0.9 }).addTo(map)
-        );
+        [[34, 108], [40, -74], [51, 0], [35, 139], [25, 45]].forEach(p => L.circleMarker(p, { color: '#f85149', radius: 4 }).addTo(map));
     }
 
-    // 2. 新闻获取
     async function fetchNews() {
         const url = `https://corsproxy.io/?${encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en')}`;
         try {
@@ -138,73 +117,37 @@
             const raw = xml.querySelectorAll("item");
             newsItems = Array.from(raw).slice(0, 15).map(i => ({
                 t: i.querySelector('title').textContent,
-                s: i.querySelector('source')?.textContent || 'Intel Source',
+                s: i.querySelector('source')?.textContent || 'Global',
                 l: i.querySelector('link').textContent,
-                d: i.querySelector('description')?.textContent || 'Summary encrypted.'
+                d: i.querySelector('description')?.textContent || 'Intel summarized for terminal view.',
+                rt: Math.floor(Math.random()*500)+100,
+                likes: Math.floor(Math.random()*1000)+200
             }));
             renderNews();
-        } catch (e) {
-            document.getElementById('news-feed').innerHTML = '<div class="text-red-500 font-mono text-center py-20 uppercase tracking-widest">Signal Jammed. Retrying...</div>';
-        }
+        } catch (e) { console.log("News Error"); }
     }
 
     function renderNews() {
         document.getElementById('news-feed').innerHTML = newsItems.map((n, i) => `
-            <div class="news-item">
-                <div class="news-content">
-                    <div class="text-[9px] text-gray-500 font-black mb-2 uppercase border-b border-gray-800 pb-1">Uplink: ${n.s}</div>
-                    <p onclick="openModal(${i})" class="text-2xl font-bold text-gray-100 leading-tight mb-4 hover:text-blue-400 cursor-pointer transition-colors">${n.t}</p>
-                    <div class="flex gap-4">
-                        <div class="stat-badge"><b>🔄 ${Math.floor(Math.random()*400)+100}</b> RT</div>
-                        <div class="stat-badge"><b>💬 ${Math.floor(Math.random()*200)+50}</b> REPLIES</div>
-                    </div>
+            <div class="bg-[#161b22] border border-[#30363d] rounded-xl overflow-hidden mb-4">
+                <div class="p-5 border-l-4 border-[#f85149]">
+                    <div class="text-[9px] text-gray-500 font-bold mb-2 uppercase border-b border-gray-800 pb-1">Origin: ${n.s}</div>
+                    <h3 onclick="openModal(${i})" class="text-xl font-bold text-white leading-tight cursor-pointer hover:text-blue-400 transition-all">${n.t}</h3>
                 </div>
             </div>`).join('');
-    }
-
-    // 3. 加密货币 + 能源模拟动态数据
-    async function fetchCrypto() {
-        try {
-            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,tether&vs_currencies=usd&include_24hr_change=true');
-            const data = await res.json();
-            const list = [
-                { id: 'bitcoin', sym: 'BTC' }, { id: 'ethereum', sym: 'ETH' },
-                { id: 'solana', sym: 'SOL' }, { id: 'tether', sym: 'USDT' }
-            ];
-            document.getElementById('crypto-list').innerHTML = list.map(c => {
-                const price = data[c.id].usd;
-                const change = data[c.id].usd_24h_change.toFixed(2);
-                return `
-                    <div class="data-row flex-col items-start gap-1">
-                        <div class="flex justify-between w-full">
-                            <span class="text-gray-500 font-bold">${c.sym}</span>
-                            <span class="${change >=0 ? 'text-green-500' : 'text-red-500'} font-bold">${change}%</span>
-                        </div>
-                        <div class="text-white text-sm font-black">$${price.toLocaleString()}</div>
-                    </div>`;
-            }).join('');
-        } catch (e) { console.error("Crypto Link Down"); }
-    }
-
-    // 4. 模拟能源波动 (每隔几秒随机微调，增强真实感)
-    function updateEnergy() {
-        const wti = (74 + Math.random()).toFixed(2);
-        const brent = (78 + Math.random()).toFixed(2);
-        document.getElementById('energy-list').innerHTML = `
-            <div class="data-row"><span>WTI CRUDE</span><span class="text-white font-bold">$${wti}</span></div>
-            <div class="data-row"><span>BRENT OIL</span><span class="text-white font-bold">$${brent}</span></div>
-            <div class="data-row"><span>NATURAL GAS</span><span class="text-green-400 font-bold">2.3${Math.floor(Math.random()*99)}</span></div>
-        `;
     }
 
     function openModal(idx) {
         const n = newsItems[idx];
         document.getElementById('modal-lang-mount').appendChild(langEl);
         document.getElementById('modal-body').innerHTML = `
-            <h2 class="text-4xl font-black mb-8 text-white uppercase italic tracking-tighter leading-tight border-b border-gray-800 pb-6">${n.t}</h2>
-            <div class="text-gray-400 text-xl leading-relaxed border-l-4 border-accent pl-8 italic bg-white/5 p-8 rounded-lg mb-6">${n.d}</div>
-            <a href="${n.l}" target="_blank" class="text-blue-500 font-bold uppercase hover:underline">View Source Frequency ↗</a>
+            <h2 class="text-3xl font-black mb-6 text-white uppercase italic tracking-tight">${n.t}</h2>
+            <div class="text-gray-400 text-lg leading-relaxed border-l-4 border-red-500 pl-6 py-2 bg-white/5 rounded-r-lg mb-6">${n.d}</div>
+            <a href="${n.l}" target="_blank" class="text-blue-500 text-sm font-bold underline">OPEN OFFICIAL SOURCE FREQUENCY ↗</a>
         `;
+        document.getElementById('m-rt').innerText = n.rt;
+        document.getElementById('m-like').innerText = n.likes;
+        document.getElementById('chat-stream').innerHTML = '<div class="text-gray-600 italic">[SYSTEM]: LINK SECURE. AWAITING INPUT...</div>';
         document.getElementById('detail-overlay').style.display = 'block';
         document.body.style.overflow = 'hidden';
     }
@@ -215,15 +158,48 @@
         document.body.style.overflow = 'auto';
     }
 
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+    // 交互功能
+    function boostRT() { document.getElementById('m-rt').innerText = parseInt(document.getElementById('m-rt').innerText) + 1; }
+    function boostLike() { document.getElementById('m-like').innerText = parseInt(document.getElementById('m-like').innerText) + 1; }
+    function sendMsg() {
+        const input = document.getElementById('chat-input');
+        if(!input.value) return;
+        const msg = `<div class="bg-white/5 p-2 rounded border border-gray-800">
+            <span class="text-blue-400 font-bold">AGENT_0x${Math.floor(Math.random()*999)}:</span> 
+            <span class="text-gray-200">${input.value}</span>
+        </div>`;
+        document.getElementById('chat-stream').innerHTML += msg;
+        input.value = '';
     }
 
+    // 能源与加密（已锁定）
+    async function fetchCrypto() {
+        try {
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,tether&vs_currencies=usd&include_24hr_change=true');
+            const data = await res.json();
+            const list = [{id:'bitcoin',s:'BTC'},{id:'ethereum',s:'ETH'},{id:'solana',s:'SOL'},{id:'tether',s:'USDT'}];
+            document.getElementById('crypto-list').innerHTML = list.map(c => `
+                <div class="data-row flex-col items-start">
+                    <span class="text-gray-500 font-bold text-[9px]">${c.s}</span>
+                    <span class="text-white font-black">$${data[c.id].usd.toLocaleString()}</span>
+                </div>`).join('');
+        } catch(e){}
+    }
+
+    function updateEnergy() {
+        document.getElementById('energy-list').innerHTML = `
+            <div class="data-row"><span>BRENT OIL</span><span class="text-white">$${(78+Math.random()).toFixed(2)}</span></div>
+            <div class="data-row"><span>WTI CRUDE</span><span class="text-white">$${(73+Math.random()).toFixed(2)}</span></div>
+        `;
+    }
+
+    function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element'); }
+
     window.onload = () => {
-        initMap(); fetchNews(); fetchCrypto();
-        setInterval(fetchCrypto, 30000);
+        initMap(); fetchNews(); fetchCrypto(); updateEnergy();
         setInterval(updateEnergy, 3000);
-    };
+        setInterval(fetchCrypto, 30000);
+    }
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
