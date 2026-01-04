@@ -1,150 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOTYO GLOBAL MONITOR</title>
+    <title>GLOBAL MONITOR - Intelligence Engine v4.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #050505; color: #d4d4d4; font-family: 'Courier New', monospace; overflow-x: hidden; }
-        /* 顶部动态红色斜纹条 */
+        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; }
+        
+        /* 顶部红色动态警戒条 */
         .emergency-bar { 
             background: repeating-linear-gradient(45deg, #b91c1c, #b91c1c 10px, #000 10px, #000 20px);
             background-size: 200% 100%;
             animation: move-stripes 20s linear infinite;
         }
         @keyframes move-stripes { from { background-position: 0 0; } to { background-position: 100% 0; } }
-        /* 卡片样式 */
-        .exclusive-card { border-left: 4px solid #f85149; background: linear-gradient(90deg, #1a0a0a, #050505); }
-        .ai-card { border-left: 2px solid #222; background: #0a0a0a; border-bottom: 1px solid #111; }
-        /* 动态雷达地图背景 */
-        .radar-box { position: relative; background: #0a0a0a; border: 1px solid #222; height: 250px; overflow: hidden; }
-        .map-overlay { position: absolute; inset: 0; opacity: 0.1; background: url('https://upload.wikimedia.org/wikipedia/commons/4/41/World_map_blank_without_borders.svg') center/cover; filter: invert(1); }
-        .sweep { position: absolute; width: 100%; height: 2px; background: rgba(248, 81, 73, 0.4); animation: sweep 4s linear infinite; }
-        @keyframes sweep { from { top: 0%; } to { top: 100%; } }
-        /* 隐藏翻译工具栏原生UI */
+
+        /* 新闻卡片: 还原截图中的深色风格 */
+        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 6px; margin-bottom: 25px; overflow: hidden; }
+        .news-content { padding: 20px; border-left: 4px solid var(--accent); }
+        .news-meta { font-size: 11px; color: #8b949e; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* 语言标签和翻译 */
+        .lang-tag { background: #1f2937; color: #9ca3af; font-size: 10px; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
+        .translate-btn { color: var(--blue); font-size: 11px; cursor: pointer; text-decoration: underline; margin-left: 10px; }
+
+        /* 评论区 (保留你的原始逻辑) */
+        .comment-section { background: #090c10; padding: 15px; border-top: 1px solid #30363d; }
+        .comment-data { font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+        .comment-user { color: var(--blue); font-weight: bold; margin-right: 5px; }
+        
+        /* 英文显示的社交计数 */
+        .social-stats { display: flex; gap: 15px; font-size: 11px; color: #8b949e; margin-top: 15px; font-weight: bold; font-family: monospace; }
+
+        /* 右侧地图 (还原截图) */
+        .sidebar-card { background: var(--card); border: 1px solid #30363d; border-radius: 6px; padding: 15px; margin-bottom: 20px; }
+        .map-box { border: 1px dashed #30363d; background: #0d1117; height: 200px; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .scan-line { position: absolute; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: scan 4s linear infinite; }
+        @keyframes scan { from { top: 0; } to { top: 100%; } }
+        
+        /* 隐藏 Google 翻译原生条 */
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; }
     </style>
 </head>
 <body>
-    <div id="google_translate_element" class="bg-black text-right pr-4 pt-1 opacity-50 hover:opacity-100"></div>
 
-    <div class="emergency-bar text-white py-1.5 px-4 text-[10px] font-black flex justify-between uppercase italic tracking-widest">
-        <span>🚨 STATUS: HYBRID FEED ACTIVE</span>
-        <span class="animate-pulse">● SIGNAL ENCRYPTED</span>
-        <span>LINK: KOTYO-ALPHA</span>
+<div class="emergency-bar text-white py-1 px-4 text-[10px] font-bold flex justify-between uppercase italic tracking-widest shadow-2xl">
+    <span>[URGENT] GLOBAL MONITORING ACTIVE...</span>
+    <span class="animate-pulse">● SECURE SATELLITE FEED</span>
+</div>
+
+<header class="p-6 max-w-7xl mx-auto flex justify-between items-end">
+    <h1 class="text-2xl font-black italic tracking-tighter">GLOBAL <span class="text-[#f85149]">MONITOR</span></h1>
+    <div id="google_translate_element"></div> </header>
+
+<main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="lg:col-span-8">
+        <h2 class="text-xl font-bold mb-6 flex items-center gap-2">🔥 24H Global Intel Feed <span class="text-[10px] text-green-500 font-mono animate-pulse">● LIVE</span></h2>
+        
+        <div id="dynamic-news-feed" class="space-y-6">
+            <div class="p-20 text-center font-mono text-gray-600 animate-pulse">SYNCING GLOBAL FREQUENCIES...</div>
+        </div>
     </div>
 
-    <header class="p-6 border-b border-neutral-900 flex justify-between items-center bg-black">
-        <h1 class="text-2xl font-black italic tracking-tighter uppercase">GLOBAL <span class="text-[#f85149]">MONITOR</span></h1>
-        <div class="text-[9px] text-neutral-600 font-mono text-right font-bold uppercase">Access: Commander Level<br>Station: Kyoto_Hub</div>
-    </header>
-
-    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-10">
-            <section>
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-red-500 font-bold text-[10px] uppercase tracking-widest italic">/ COMMANDER_INTEL</span>
-                    <div class="h-[1px] flex-1 bg-red-900/20"></div>
-                </div>
-                <div id="airtable-feed" class="space-y-4"></div>
-            </section>
-
-            <section>
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-neutral-500 font-bold text-[10px] uppercase tracking-widest italic">/ GLOBAL_SATELLITE_STREAM</span>
-                    <div class="h-[1px] flex-1 bg-neutral-800"></div>
-                </div>
-                <div id="ai-feed" class="space-y-4">
-                    <div class="p-20 text-center text-neutral-800 font-mono animate-pulse uppercase tracking-widest text-xs">Scanning signals...</div>
-                </div>
-            </section>
+    <div class="lg:col-span-4">
+        <div class="sidebar-card">
+            <h3 class="text-sm font-bold mb-4 flex items-center gap-2">📊 Global Stats</h3>
+            <div class="text-[11px] space-y-2 font-mono">
+                <div class="flex justify-between"><span>Active Sources</span><span class="text-gray-400">512</span></div>
+                <div class="flex justify-between border-t border-gray-800 pt-2 font-bold text-red-500"><span>Threat Level</span><span>HIGH</span></div>
+            </div>
         </div>
 
-        <aside class="space-y-6">
-            <div class="radar-box rounded">
-                <div class="map-overlay"></div>
-                <div class="sweep"></div>
-                <div class="absolute inset-0 flex flex-col items-center justify-center opacity-40">
-                    <div class="w-16 h-16 border border-red-900 rounded-full animate-ping mb-2"></div>
-                    <span class="text-[8px] font-mono text-red-700 uppercase">Tracking Active</span>
-                </div>
+        <div class="sidebar-card">
+            <h3 class="text-sm font-bold mb-4 flex items-center gap-2">📡 Situational Map</h3>
+            <div class="map-box">
+                <div class="scan-line"></div>
+                <div class="text-[10px] text-gray-600 font-mono text-center">Global Intel Map<br>Awaiting Satellite Feed...</div>
             </div>
+        </div>
+    </div>
+</main>
 
-            <div class="bg-neutral-900/30 p-5 border border-neutral-800 rounded">
-                <h3 class="text-[10px] font-bold text-neutral-500 mb-4 uppercase">System Status</h3>
-                <div class="text-[10px] space-y-2 font-mono">
-                    <div class="flex justify-between"><span>SATELLITE</span><span class="text-green-700">ONLINE</span></div>
-                    <div class="flex justify-between"><span>DATABASE</span><span class="text-green-700">CONNECTED</span></div>
-                    <div class="flex justify-between border-t border-neutral-800 pt-2 mt-2 font-bold text-red-600 uppercase italic underline">Threat Level: Elevated</div>
-                </div>
-            </div>
-        </aside>
-    </main>
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'auto', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+    }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-    <script>
-        // Airtable 配置
-        const p1 = "patR3J9RQjyCdCKcN";
-        const p2 = "c12832bf555d070c5b7c26130ada69e2c8b29b1c3ed990e176745682313fdc1b";
-        const TOKEN = p1 + "." + p2;
-
-        async function fetchAirtable() {
-            const container = document.getElementById('airtable-feed');
-            try {
-                const r = await fetch("https://api.airtable.com/v0/app1bKpTNxXpFD9jK/Intelligence%20Entries", { headers: { Authorization: "Bearer " + TOKEN } });
-                const d = await r.json();
-                container.innerHTML = '';
-                d.records.forEach(item => {
-                    const f = item.fields;
-                    const div = document.createElement('div');
-                    div.className = "exclusive-card p-6 rounded shadow-lg";
-                    div.innerHTML = `<div class="text-[9px] text-red-600 font-black mb-2 uppercase tracking-tighter">>>> Priority Command</div><h3 class="text-xl font-bold text-white">${f.Headline || f.title || 'Standing by...'}</h3>`;
-                    container.appendChild(div);
-                });
-            } catch (e) { console.error("Airtable Error"); }
-        }
-
-        async function fetchAI() {
-            const container = document.getElementById('ai-feed');
-            const rssUrl = encodeURIComponent('https://www.reutersagency.com/feed/?best-topics=world-news&post_type=best');
-            try {
-                const response = await fetch(`https://api.allorigins.win/get?url=${rssUrl}`);
-                const data = await response.json();
-                const parser = new DOMParser();
-                const xml = parser.parseFromString(data.contents, "text/xml");
-                const items = xml.querySelectorAll("item");
-                container.innerHTML = '';
-                items.forEach((item, i) => {
-                    if (i > 8) return;
-                    const div = document.createElement('div');
-                    div.className = "ai-card p-6 transition-all hover:bg-neutral-900";
-                    div.innerHTML = `
-                        <div class="flex justify-between text-[9px] text-neutral-600 mb-2 font-mono">
-                            <span>REUTERS_INTEL // ID_${i+1}</span>
-                            <span>${new Date(item.querySelector("pubDate").textContent).toLocaleTimeString()}</span>
+<script>
+    // 自动抓取新闻函数 (多语言混合源)
+    async function fetchGlobalNews() {
+        const feedContainer = document.getElementById('dynamic-news-feed');
+        const rssUrl = encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en'); // 使用全球源
+        
+        try {
+            const response = await fetch(`https://api.allorigins.win/get?url=${rssUrl}`);
+            const data = await response.json();
+            const items = new DOMParser().parseFromString(data.contents, "text/xml").querySelectorAll("item");
+            
+            feedContainer.innerHTML = ''; // 清空加载提示
+            
+            items.forEach((item, i) => {
+                if (i > 8) return; // 只取前9条新闻
+                
+                // 模拟多语言标签
+                const langTags = ['ENG', 'JPN', 'RUS', 'CHN', 'FRA'];
+                const currentLang = langTags[i % langTags.length];
+                
+                const newsId = i;
+                const div = document.createElement('div');
+                div.className = "news-item";
+                div.innerHTML = `
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span>${Math.floor(Math.random()*60)} mins ago | ${item.querySelector("source")?.textContent || 'Reuters'}</span>
+                            <div>
+                                <span class="lang-tag">${currentLang}</span>
+                                <span class="translate-btn" onclick="window.scrollTo(0,0)">Translate</span>
+                            </div>
                         </div>
-                        <h4 class="text-base font-bold text-neutral-300 mb-4">${item.querySelector("title").textContent}</h4>
-                        <div class="flex gap-4 text-[9px] text-neutral-800 font-black border-t border-neutral-900 pt-4 uppercase italic">
-                            <span>💬 ${Math.floor(Math.random()*400) + 10}</span>
-                            <span>🔄 ${Math.floor(Math.random()*200) + 5}</span>
+                        <p class="text-[17px] font-bold leading-snug text-white">${item.querySelector("title").textContent}</p>
+                        <div class="social-stats">
+                            <span>💬 ${Math.floor(Math.random()*100) + 15} Comments</span>
+                            <span>🔄 ${Math.floor(Math.random()*60) + 5} Retweets</span>
                         </div>
-                    `;
-                    container.appendChild(div);
-                });
-            } catch (e) { container.innerHTML = "Signal interrupted"; }
+                    </div>
+                    <div class="comment-section">
+                        <div class="comment-list" id="list-${newsId}">
+                            <div class="comment-data"><span class="comment-user">System:</span> 安全线路已建立。</div>
+                        </div>
+                        <div class="flex gap-2 mt-4">
+                            <input type="text" id="input-${newsId}" class="flex-1 bg-[#0d1117] border border-[#30363d] text-white p-2 rounded text-sm" placeholder="发表评论...">
+                            <button class="bg-[#58a6ff] text-white px-4 py-1 rounded text-sm font-bold" onclick="postComment(${newsId})">发送</button>
+                        </div>
+                    </div>
+                `;
+                feedContainer.appendChild(div);
+            });
+        } catch (e) {
+            feedContainer.innerHTML = "信号中断 (SYNC ERROR)";
         }
+    }
 
-        fetchAirtable(); fetchAI();
-        setInterval(fetchAirtable, 10000); // 10秒刷一次Airtable
-        setInterval(fetchAI, 300000);      // 5分钟刷一次新闻
-    </script>
-</body>
-</html>
+    // 评论逻辑 (保留你的原始功能)
+    function postComment(newsId) {
