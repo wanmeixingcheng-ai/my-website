@@ -2,76 +2,67 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>情报同步中心</title>
+    <title>KOTYO Intelligence Monitor</title>
     <style>
-        body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; padding: 20px; }
-        .status-box { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #f85149; }
-        .news-card { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
-        h1 { color: #f85149; font-size: 20px; }
-        .error-msg { color: #ffa39e; background: #2a1215; padding: 10px; border-radius: 4px; display: none; }
+        body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .status-bar { background: #161b22; border: 1px solid #30363d; padding: 10px 15px; border-radius: 6px; margin-bottom: 20px; font-size: 13px; border-left: 4px solid #f85149; }
+        .card { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 8px; margin-bottom: 15px; transition: 0.2s; }
+        .card:hover { border-color: #58a6ff; }
+        .meta { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .headline { font-size: 18px; font-weight: bold; color: #fff; margin: 0; }
+        .badge { background: #238636; color: white; padding: 2px 8px; border-radius: 10px; font-size: 10px; }
     </style>
 </head>
 <body>
 
-    <h1>🛰️ 全球情报站 - 自动同步模式</h1>
-    
-    <div id="status" class="status-box">正在尝试连接 Airtable 数据库...</div>
-    <div id="error-info" class="error-msg"></div>
+<div class="container">
+    <h2 style="color:#f85149">📡 KOTYO 实战情报流</h2>
+    <div id="status" class="status-bar">正在初始化卫星链接...</div>
+    <div id="feed"></div>
+</div>
 
-    <div id="content-list">
-        </div>
+<script>
+    // 基于你提供的最新信息
+    const pA = "patR3J9RQjyCdCKcN";
+    const pB = "c12832bf555d070c5b7c26130ada69e2c8b29b1c3ed990e176745682313fdc1b";
+    const TOKEN = pA + "." + pB;
+    const BASE_ID = "app1bKpTNxXpFD9jK";
+    const TABLE_NAME = "Intelligence Entries"; // 确认自截图：Data模式下的标签名
 
-    <script>
-        // ======= 尝试以下配置 =======
-        const pA = "patR3J9RQjyCdCKcN";
-        const pB = "c12832bf555d070c5b7c26130ada69e2c8b29b1c3ed990e176745682313fdc1b";
-        
-        const TOKEN = pA + "." + pB; 
-        const BASE_ID = "app1bKpTNxXpFD9jK";
-        
-        // 如果你的表名带空格，请一定要写上空格
-        const TABLE_NAME = "Table 1";
+    async function loadIntelligence() {
+        const feed = document.getElementById('feed');
+        const status = document.getElementById('status');
 
-        async function syncData() {
-            const status = document.getElementById('status');
-            const errorInfo = document.getElementById('error-info');
-            const list = document.getElementById('content-list');
+        try {
+            const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?sort%5B0%5D%5Bfield%5D=Region&sort%5B0%5D%5Bdirection%5D=desc`;
+            const resp = await fetch(url, { headers: { Authorization: `Bearer ${TOKEN}` } });
 
-            try {
-                const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
-                const response = await fetch(url, {
-                    headers: { Authorization: `Bearer ${TOKEN}` }
-                });
+            if (!resp.ok) throw new Error("无法读取数据，请确认Airtable中列名是否有Headline");
 
-                if (!response.ok) {
-                    throw new Error(`连接失败！请检查：1.表名是否确实叫 ${TABLE_NAME}？ 2.Token是否正确？`);
-                }
+            const data = await resp.json();
+            status.innerHTML = `● 系统在线 | 已同步 ${data.records.length} 条情报记录`;
+            
+            feed.innerHTML = data.records.map(r => `
+                <div class="card">
+                    <div class="meta">
+                        <span>来源: ${r.fields.Source || 'OSINT'}</span>
+                        <span class="badge">${r.fields.Region || 'GLOBAL'}</span>
+                    </div>
+                    <p class="headline">${r.fields.Headline || '情报内容加载中...'}</p>
+                </div>
+            `).join('');
 
-                const data = await response.json();
-                status.innerHTML = "✅ 已成功连接 Airtable！正在读取情报...";
-                
-                if (data.records.length === 0) {
-                    list.innerHTML = "<p>数据库里是空的，快去 Airtable 填一行试试！</p>";
-                } else {
-                    list.innerHTML = data.records.map(r => `
-                        <div class="news-card">
-                            <div style="font-size:12px; color:#8b949e">${new Date(r.createdTime).toLocaleString()}</div>
-                            <h3 style="margin:10px 0">${r.fields.title || '（未填写title列）'}</h3>
-                            <p>${r.fields.content || '（未填写content列）'}</p>
-                        </div>
-                    `).join('');
-                    status.innerHTML = `✅ 同步成功！共发现 ${data.records.length} 条情报。`;
-                }
-
-            } catch (err) {
-                status.innerHTML = "❌ 同步出错";
-                errorInfo.style.display = "block";
-                errorInfo.innerHTML = err.message;
-            }
+        } catch (err) {
+            status.innerHTML = "❌ 链接失败：请确保Airtable表格中有一列名为 Headline (注意首字母大写)";
+            status.style.borderColor = "#f85149";
         }
+    }
 
-        syncData();
-    </script>
+    loadIntelligence();
+    // 每分钟自动刷新
+    setInterval(loadIntelligence, 60000);
+</script>
+
 </body>
 </html>
-
