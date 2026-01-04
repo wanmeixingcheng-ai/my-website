@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOBAL INTEL | OFFICIAL MONITORING</title>
+    <title>GLOBAL INTEL | STRATEGIC TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; --green: #2ea043; }
+        :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; --green: #2ea043; --orange: #f97316; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; margin: 0; }
 
         /* 顶部警戒滚动条 */
@@ -16,134 +16,213 @@
         .ticker-move { display: inline-block; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
-        /* 竖排翻译组件 - 还原 999.png */
+        /* 999.png 风格竖排翻译器 */
         .v-lang-wrap { width: 85px; background: white; padding: 6px; border-radius: 4px; border: 2px solid var(--blue); position: relative; z-index: 50; }
         .goog-te-gadget { color: transparent !important; font-size: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; }
         .goog-te-combo { background: #fff !important; color: #333 !important; border: 1px solid #ccc !important; width: 75px !important; font-size: 11px !important; outline: none; margin-top: 4px; }
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0px !important; position: static !important; }
 
-        /* 24H Feed 标题样式 */
-        .feed-header { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; }
-        .live-tag { border: 1.5px solid var(--green); color: var(--green); padding: 3px 12px; border-radius: 6px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
-        .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        /* 侧边挂件统一样式 */
+        .side-widget { background: var(--card); border: 1px solid #30363d; padding: 16px; margin-bottom: 16px; border-radius: 12px; }
+        .widget-title { font-size: 10px; color: #8b949e; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 15px; border-left: 3px solid var(--blue); padding-left: 10px; display: flex; justify-content: space-between; }
+        
+        /* 数据行样式 */
+        .data-row { display: flex; justify-content: space-between; align-items: center; background: #0d1117; padding: 8px 12px; rounded-lg: 6px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #21262d; font-family: 'Monaco', monospace; font-size: 11px; }
+        .trend-up { color: var(--green); }
+        .trend-down { color: var(--accent); }
 
-        /* 新闻卡片与首页统计 */
-        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 16px; transition: 0.2s; }
-        .news-item:hover { border-color: var(--blue); background: #1c2128; }
-        .news-content { padding: 18px; border-left: 5px solid var(--accent); }
-        .stat-badge { background: #0d1117; padding: 4px 12px; border-radius: 4px; font-size: 11px; color: #8b949e; font-weight: bold; border: 1px solid #30363d; display: flex; align-items: center; gap: 5px; }
-        .stat-badge b { color: var(--blue); }
+        /* 雷达地图 */
+        #radar-map { height: 180px; width: 100%; border-radius: 8px; background: #000; filter: invert(100%) hue-rotate(180deg) brightness(0.6) contrast(1.2); }
 
-        /* 雷达地图风格 */
-        #radar-map { height: 280px; width: 100%; border-radius: 8px; background: #000; filter: invert(100%) hue-rotate(180deg) brightness(0.7) contrast(1.2); }
+        /* 弹窗层 */
+        #detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; backdrop-filter: blur(10px); }
+        .detail-modal { background: var(--card); max-width: 900px; margin: 1.5% auto; height: 92vh; border: 1px solid #444; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; }
+
+        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
     </style>
 </head>
 <body>
 
-<div class="ticker-bar"><div class="ticker-move">[SECURE UPLINK] SYNCING GLOBAL OFFICIAL BROADCASTS // NODE: 0x219-INTEL // JAN 2026 // SECURITY: VERIFIED</div></div>
+<div class="ticker-bar"><div class="ticker-move">[STRATEGIC ALERT] CRUDE OIL PRICES VOLATILE // BTC STABILIZING AT $95K // NATO SURVEILLANCE ACTIVE // RE-ROUTING SECURE DATA NODES...</div></div>
 
 <div class="max-w-7xl mx-auto p-6">
-    <header class="flex justify-between items-center mb-12 border-b border-gray-800 pb-10">
+    <header class="flex justify-between items-center mb-10 border-b border-gray-800 pb-10">
         <div>
             <h1 class="text-5xl font-black italic tracking-tighter uppercase text-white">GLOBAL <span class="text-[#f85149]">INTEL</span></h1>
-            <p class="text-[10px] text-gray-500 font-black tracking-[0.5em] uppercase mt-2">Official Monitoring System</p>
+            <p class="text-[10px] text-gray-500 font-black tracking-[0.5em] uppercase mt-2">Strategic Command Terminal</p>
         </div>
-        <div class="v-lang-wrap" id="lang-host">
-            <div id="google_translate_element"></div>
-        </div>
+        <div class="v-lang-wrap" id="lang-host"><div id="google_translate_element"></div></div>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <div class="lg:col-span-8">
-            <div class="feed-header">
-                <span class="text-3xl">🔥</span>
-                <h2 class="text-3xl font-black text-gray-100 uppercase tracking-tight">24H Global Intel Feed</h2>
-                <div class="live-tag"><div class="live-dot"></div> LIVE DISCUSSION</div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-7">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-3xl">📡</span>
+                <h2 class="text-3xl font-black text-white uppercase tracking-tight">24H Intel Stream</h2>
+                <div class="border border-red-500 text-red-500 px-3 py-1 rounded text-[10px] font-black animate-pulse">LIVE DECRYPTING</div>
             </div>
             <div id="news-feed" class="space-y-4">
-                <div class="py-20 text-center font-mono text-gray-700 animate-pulse text-sm">SEARCHING FOR SECURE FREQUENCIES...</div>
+                <div class="py-20 text-center font-mono text-gray-700 animate-pulse uppercase">Intercepting Uplink...</div>
             </div>
         </div>
 
-        <div class="lg:col-span-4">
-            <div class="bg-[#161b22] border border-[#30363d] p-4 rounded-xl mb-6 shadow-2xl">
-                <h3 class="text-[10px] text-gray-500 font-black mb-4 uppercase tracking-widest">Global Radar Scope</h3>
+        <div class="lg:col-span-5 space-y-4">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="side-widget">
+                    <h3 class="widget-title">ENERGY ASSETS <span class="text-orange-500">●</span></h3>
+                    <div id="energy-list">
+                        <div class="data-row"><span>WTI CRUDE</span><span class="text-white font-bold">$74.12</span></div>
+                        <div class="data-row"><span>BRENT OIL</span><span class="text-white font-bold">$78.45</span></div>
+                        <div class="data-row"><span>NATURAL GAS</span><span class="text-green-400 font-bold">2.341</span></div>
+                    </div>
+                </div>
+
+                <div class="side-widget">
+                    <h3 class="widget-title">FOREX INDEX <span class="text-blue-500">●</span></h3>
+                    <div class="data-row"><span>USD / CNY</span><span class="text-blue-400 font-bold">7.234</span></div>
+                    <div class="data-row"><span>EUR / USD</span><span class="text-green-500 font-bold">1.085</span></div>
+                    <div class="data-row"><span>GOLD (OZ)</span><span class="text-yellow-500 font-bold">2,042.1</span></div>
+                </div>
+            </div>
+
+            <div class="side-widget">
+                <h3 class="widget-title">CRYPTO RADAR (LIVE) <span id="crypto-status" class="text-green-500">SYNCED</span></h3>
+                <div id="crypto-list" class="grid grid-cols-2 gap-2">
+                    <div class="animate-pulse text-gray-700 text-[10px] py-4">Connecting to Blockchain...</div>
+                </div>
+            </div>
+
+            <div class="side-widget">
+                <h3 class="widget-title">GLOBAL RADAR SCOPE</h3>
                 <div id="radar-map"></div>
+                <div class="mt-4 flex justify-between text-[9px] font-mono text-gray-600">
+                    <span>COORDS: 35.6895° N, 139.6917° E</span>
+                    <span>SIGNAL: STRONG</span>
+                </div>
             </div>
-            <div class="bg-[#161b22] border border-[#30363d] p-6 rounded-xl text-xs font-mono space-y-4">
-                <div class="flex justify-between border-b border-gray-800 pb-2"><span>NETWORK</span><span class="text-green-500">ENCRYPTED</span></div>
-                <div class="flex justify-between text-gray-400"><span>STATUS</span><span id="ping-text" class="text-blue-400">SCANNING...</span></div>
-            </div>
+
         </div>
     </div>
 </div>
 
+<div id="detail-overlay">
+    <div class="detail-modal">
+        <div class="p-5 bg-[#0d1117] border-b border-gray-800 flex justify-between items-center">
+            <button onclick="closeModal()" class="text-xs text-blue-500 font-bold hover:text-white uppercase">← Back to Command</button>
+            <div id="modal-lang-mount"></div>
+        </div>
+        <div class="p-10 flex-1 overflow-y-auto" id="modal-body"></div>
+    </div>
+</div>
+
 <script>
-    // 1. 初始化地图逻辑
+    let newsItems = [];
+    const langEl = document.getElementById('google_translate_element');
+
+    // 1. 地图初始化
     function initMap() {
-        const map = L.map('radar-map', { zoomControl: false, attributionControl: false }).setView([20, 0], 2);
+        const map = L.map('radar-map', { zoomControl: false, attributionControl: false }).setView([20, 10], 2);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        
-        const hotspots = [[34, 108], [40, -74], [51, 0], [35, 139], [-33, 151]];
-        hotspots.forEach(p => {
-            L.circleMarker(p, { color: '#f85149', radius: 4, fillOpacity: 0.9 }).addTo(map);
-        });
+        [[34, 108], [40, -74], [51, 0], [35, 139], [-33, 151], [25, 45]].forEach(p => 
+            L.circleMarker(p, { color: '#f85149', radius: 4, fillOpacity: 0.9 }).addTo(map)
+        );
     }
 
-    // 2. 官方新闻抓取逻辑 (全链路加速)
-    async function fetchIntel() {
-        const target = encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en');
-        const proxy = `https://corsproxy.io/?${target}`;
-        
+    // 2. 新闻获取
+    async function fetchNews() {
+        const url = `https://corsproxy.io/?${encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en')}`;
         try {
-            const start = Date.now();
-            const res = await fetch(proxy);
+            const res = await fetch(url);
             const text = await res.text();
-            
             const xml = new DOMParser().parseFromString(text, "text/xml");
-            const items = xml.querySelectorAll("item");
-            
-            if (items.length > 0) {
-                document.getElementById('ping-text').innerText = (Date.now() - start) + "ms";
-                renderIntel(items);
-            }
+            const raw = xml.querySelectorAll("item");
+            newsItems = Array.from(raw).slice(0, 15).map(i => ({
+                t: i.querySelector('title').textContent,
+                s: i.querySelector('source')?.textContent || 'Intel Source',
+                l: i.querySelector('link').textContent,
+                d: i.querySelector('description')?.textContent || 'Summary encrypted.'
+            }));
+            renderNews();
         } catch (e) {
-            document.getElementById('news-feed').innerHTML = '<div class="text-red-500 text-center font-mono py-10">UPLINK CONGESTED. RETRYING...</div>';
-            setTimeout(fetchIntel, 5000);
+            document.getElementById('news-feed').innerHTML = '<div class="text-red-500 font-mono text-center py-20 uppercase tracking-widest">Signal Jammed. Retrying...</div>';
         }
     }
 
-    function renderIntel(items) {
-        let html = '';
-        Array.from(items).slice(0, 15).forEach(i => {
-            const rt = Math.floor(Math.random()*400) + 100;
-            const cm = Math.floor(Math.random()*200) + 50;
-            html += `
-                <div class="news-item">
-                    <div class="news-content">
-                        <div class="text-[9px] text-gray-500 font-black mb-3 uppercase border-b border-gray-800 pb-1">Verified Origin: ${i.querySelector('source')?.textContent || 'Global'}</div>
-                        <p onclick="window.open('${i.querySelector('link').textContent}', '_blank')" class="text-2xl font-bold text-gray-100 leading-tight mb-5 hover:text-blue-400 cursor-pointer transition-colors">${i.querySelector('title').textContent}</p>
-                        <div class="flex gap-4">
-                            <div class="stat-badge"><b>🔄 ${rt}</b> RT</div>
-                            <div class="stat-badge"><b>💬 ${cm}</b> REPLIES</div>
-                        </div>
+    function renderNews() {
+        document.getElementById('news-feed').innerHTML = newsItems.map((n, i) => `
+            <div class="news-item">
+                <div class="news-content">
+                    <div class="text-[9px] text-gray-500 font-black mb-2 uppercase border-b border-gray-800 pb-1">Uplink: ${n.s}</div>
+                    <p onclick="openModal(${i})" class="text-2xl font-bold text-gray-100 leading-tight mb-4 hover:text-blue-400 cursor-pointer transition-colors">${n.t}</p>
+                    <div class="flex gap-4">
+                        <div class="stat-badge"><b>🔄 ${Math.floor(Math.random()*400)+100}</b> RT</div>
+                        <div class="stat-badge"><b>💬 ${Math.floor(Math.random()*200)+50}</b> REPLIES</div>
                     </div>
-                </div>`;
-        });
-        document.getElementById('news-feed').innerHTML = html;
+                </div>
+            </div>`).join('');
     }
 
-    // 3. 翻译组件
+    // 3. 加密货币 + 能源模拟动态数据
+    async function fetchCrypto() {
+        try {
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,tether&vs_currencies=usd&include_24hr_change=true');
+            const data = await res.json();
+            const list = [
+                { id: 'bitcoin', sym: 'BTC' }, { id: 'ethereum', sym: 'ETH' },
+                { id: 'solana', sym: 'SOL' }, { id: 'tether', sym: 'USDT' }
+            ];
+            document.getElementById('crypto-list').innerHTML = list.map(c => {
+                const price = data[c.id].usd;
+                const change = data[c.id].usd_24h_change.toFixed(2);
+                return `
+                    <div class="data-row flex-col items-start gap-1">
+                        <div class="flex justify-between w-full">
+                            <span class="text-gray-500 font-bold">${c.sym}</span>
+                            <span class="${change >=0 ? 'text-green-500' : 'text-red-500'} font-bold">${change}%</span>
+                        </div>
+                        <div class="text-white text-sm font-black">$${price.toLocaleString()}</div>
+                    </div>`;
+            }).join('');
+        } catch (e) { console.error("Crypto Link Down"); }
+    }
+
+    // 4. 模拟能源波动 (每隔几秒随机微调，增强真实感)
+    function updateEnergy() {
+        const wti = (74 + Math.random()).toFixed(2);
+        const brent = (78 + Math.random()).toFixed(2);
+        document.getElementById('energy-list').innerHTML = `
+            <div class="data-row"><span>WTI CRUDE</span><span class="text-white font-bold">$${wti}</span></div>
+            <div class="data-row"><span>BRENT OIL</span><span class="text-white font-bold">$${brent}</span></div>
+            <div class="data-row"><span>NATURAL GAS</span><span class="text-green-400 font-bold">2.3${Math.floor(Math.random()*99)}</span></div>
+        `;
+    }
+
+    function openModal(idx) {
+        const n = newsItems[idx];
+        document.getElementById('modal-lang-mount').appendChild(langEl);
+        document.getElementById('modal-body').innerHTML = `
+            <h2 class="text-4xl font-black mb-8 text-white uppercase italic tracking-tighter leading-tight border-b border-gray-800 pb-6">${n.t}</h2>
+            <div class="text-gray-400 text-xl leading-relaxed border-l-4 border-accent pl-8 italic bg-white/5 p-8 rounded-lg mb-6">${n.d}</div>
+            <a href="${n.l}" target="_blank" class="text-blue-500 font-bold uppercase hover:underline">View Source Frequency ↗</a>
+        `;
+        document.getElementById('detail-overlay').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('lang-host').appendChild(langEl);
+        document.getElementById('detail-overlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
     }
 
-    // 启动
     window.onload = () => {
-        initMap();
-        fetchIntel();
+        initMap(); fetchNews(); fetchCrypto();
+        setInterval(fetchCrypto, 30000);
+        setInterval(updateEnergy, 3000);
     };
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
