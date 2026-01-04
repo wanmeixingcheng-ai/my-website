@@ -3,171 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOBAL INTEL | HIGH-SPEED TERMINAL</title>
+    <title>GLOBAL INTEL | OFFICIAL TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; --green: #2ea043; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; }
-
+        
         /* 顶部警戒条 */
-        .ticker-bar { background: var(--accent); color: white; height: 30px; line-height: 30px; overflow: hidden; white-space: nowrap; font-size: 11px; font-weight: bold; border-bottom: 2px solid #000; }
+        .ticker-bar { background: var(--accent); color: white; height: 30px; line-height: 30px; overflow: hidden; white-space: nowrap; font-size: 11px; font-weight: bold; }
         .ticker-move { display: inline-block; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-
-        /* 竖排翻译组件 - 还原 999.png */
-        .v-lang-wrap { width: 85px; background: white; padding: 6px; border-radius: 4px; border: 2px solid var(--blue); box-shadow: 0 0 15px rgba(88, 166, 255, 0.4); }
+        
+        /* 999.png 风格竖排翻译器 */
+        .v-lang-wrap { width: 85px; background: white; padding: 6px; border-radius: 4px; border: 2px solid var(--blue); }
         .goog-te-gadget { color: transparent !important; font-size: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; }
-        .goog-te-gadget img { display: block !important; margin-bottom: 4px; width: 18px !important; }
-        .goog-te-combo { background: #fff !important; color: #333 !important; border: 1px solid #ccc !important; width: 75px !important; font-size: 11px !important; padding: 2px !important; outline: none; }
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0px !important; position: static !important; }
-
-        /* 标题样式 */
+        .goog-te-combo { background: #fff !important; color: #333 !important; border: 1px solid #ccc !important; width: 75px !important; font-size: 11px !important; outline: none; }
+        
+        /* 24H Feed 样式 */
         .feed-header { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; }
-        .live-tag { border: 1.5px solid var(--green); color: var(--green); padding: 3px 12px; border-radius: 6px; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .live-tag { border: 1.5px solid var(--green); color: var(--green); padding: 3px 12px; border-radius: 6px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
         .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* 新闻卡片 & 统计行 */
-        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+        /* 新闻卡片 */
+        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 16px; }
         .news-content { padding: 18px; border-left: 5px solid var(--accent); }
         .stat-badge { background: #0d1117; padding: 4px 10px; border-radius: 4px; font-size: 11px; color: #8b949e; font-weight: bold; border: 1px solid #30363d; display: flex; align-items: center; gap: 5px; }
         .stat-badge b { color: var(--blue); }
 
-        /* 弹窗 */
-        #detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; backdrop-filter: blur(8px); }
-        .detail-modal { background: var(--card); max-width: 800px; margin: 2% auto; height: 90vh; border: 1px solid #444; display: flex; flex-direction: column; border-radius: 10px; }
+        /* 修复后的地图容器 */
+        #map { height: 300px; width: 100%; border-radius: 8px; background: #000; filter: invert(100%) hue-rotate(180deg) brightness(0.6) contrast(1.2); }
     </style>
 </head>
 <body>
 
-<div class="ticker-bar"><div class="ticker-move">[FAST UPLINK] OPTIMIZED GLOBAL DATA STREAM // SOURCE: OFFICIAL RSS AGGREGATOR // CACHE: ENABLED</div></div>
+<div class="ticker-bar"><div class="ticker-move">ESTABLISHING GLOBAL SATELLITE UPLINK... MAP DATA: VERIFIED... INTEL FEED: ACTIVE... </div></div>
 
 <div class="max-w-7xl mx-auto p-6">
     <header class="flex justify-between items-center mb-10 border-b border-gray-800 pb-8">
         <div>
-            <h1 class="text-4xl font-black italic tracking-tighter uppercase text-white">GLOBAL <span class="text-[#f85149]">INTEL</span></h1>
-            <p class="text-[10px] text-gray-500 font-bold tracking-[0.4em] uppercase mt-2">Certified Intelligence Monitor</p>
+            <h1 class="text-4xl font-black italic tracking-tighter uppercase">GLOBAL <span class="text-[#f85149]">INTEL</span></h1>
+            <p class="text-[10px] text-gray-500 font-bold tracking-[0.4em] uppercase mt-2">Certified Monitoring Station</p>
         </div>
-        <div class="v-lang-wrap" id="lang-host">
-            <div id="google_translate_element"></div>
-        </div>
+        <div class="v-lang-wrap"><div id="google_translate_element"></div></div>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-8">
             <div class="feed-header">
-                <span class="text-3xl">🔥</span>
+                <span class="text-2xl">🔥</span>
                 <h2 class="text-2xl font-black text-gray-100 uppercase">24H Global Intel Feed</h2>
-                <div class="live-tag"><div class="live-dot"></div> LIVE</div>
+                <div class="live-tag"><div class="live-dot"></div> LIVE DISCUSSION</div>
             </div>
             <div id="news-feed" class="space-y-4">
-                <div class="py-20 text-center font-mono text-gray-700 animate-pulse uppercase tracking-widest">Speeding up uplink...</div>
+                <div class="py-20 text-center font-mono text-gray-600 animate-pulse uppercase">Syncing Intel...</div>
             </div>
         </div>
 
         <div class="lg:col-span-4">
-            <div class="bg-[#161b22] border border-[#30363d] p-6 rounded-xl mb-6">
-                <h3 class="text-[10px] text-gray-500 font-bold mb-4 uppercase tracking-widest">Network Status</h3>
-                <div class="text-xs font-mono space-y-2">
-                    <div class="flex justify-between"><span>NODE</span><span class="text-blue-400">GLOBAL_SYNC</span></div>
-                    <div class="flex justify-between"><span>LATENCY</span><span id="ping-val" class="text-green-500">OPTIMIZING</span></div>
-                </div>
+            <div class="bg-[#161b22] border border-[#30363d] p-4 rounded-xl mb-6 shadow-2xl">
+                <h3 class="text-[10px] text-gray-500 font-black mb-3 uppercase tracking-widest">Global Radar Scope</h3>
+                <div id="map"></div> </div>
+            <div class="bg-[#161b22] border border-[#30363d] p-6 rounded-xl text-xs font-mono space-y-3">
+                <div class="flex justify-between border-b border-gray-800 pb-2"><span>UPLINK</span><span class="text-green-500">ENCRYPTED</span></div>
+                <div class="flex justify-between"><span>LATENCY</span><span id="ping" class="text-blue-400">-- ms</span></div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div id="detail-overlay">
-    <div class="detail-modal">
-        <div class="p-4 bg-[#0d1117] border-b border-gray-800 flex justify-between items-center">
-            <button onclick="closeModal()" class="text-xs text-blue-500 font-bold tracking-widest">← CLOSE</button>
-            <div id="modal-lang-mount"></div>
-        </div>
-        <div class="p-10 flex-1 overflow-y-auto" id="modal-content"></div>
-    </div>
-</div>
-
-<script>
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'auto', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-    }
-</script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-<script>
-    let intelList = [];
-    const proxyList = [
-        'https://api.allorigins.win/get?url=',
-        'https://api.codetabs.com/v1/proxy?quest=',
-        'https://corsproxy.io/?'
-    ];
-
-    async function fetchWithRetry() {
-        const feed = encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en');
-        const start = Date.now();
-        
-        for (let proxy of proxyList) {
-            try {
-                const response = await fetch(proxy + feed);
-                if (!response.ok) throw new Error();
-                const data = await response.json();
-                const content = data.contents || data; // 兼容不同代理的返回格式
-                
-                const xml = new DOMParser().parseFromString(content, "text/xml");
-                const items = xml.querySelectorAll("item");
-                
-                if (items.length > 0) {
-                    document.getElementById('ping-val').innerText = (Date.now() - start) + 'ms';
-                    intelList = Array.from(items).slice(0, 15).map(i => ({
-                        t: i.querySelector("title").textContent,
-                        s: i.querySelector("source")?.textContent || "OFFICIAL",
-                        l: i.querySelector("link").textContent,
-                        rt: Math.floor(Math.random()*500) + 100,
-                        cm: Math.floor(Math.random()*300) + 50
-                    }));
-                    render();
-                    return;
-                }
-            } catch (e) { console.warn("Proxy failed, trying next..."); }
-        }
-        document.getElementById('news-feed').innerHTML = '<div class="text-red-500">Network Congested. Retrying...</div>';
-        setTimeout(fetchWithRetry, 3000);
-    }
-
-    function render() {
-        document.getElementById('news-feed').innerHTML = intelList.map((n, i) => `
-            <div class="news-item">
-                <div class="news-content">
-                    <div class="text-[9px] text-gray-500 font-black mb-2 uppercase border-b border-gray-800 pb-1">
-                        ORIGIN: ${n.s}
-                    </div>
-                    <p onclick="openModal(${i})" class="text-xl font-bold text-gray-100 leading-tight mb-4 hover:text-blue-400 cursor-pointer transition-colors">${n.t}</p>
-                    <div class="flex justify-between items-center">
-                        <div class="flex gap-3">
-                            <div class="stat-badge"><b>🔄 ${n.rt}</b> RT</div>
-                            <div class="stat-badge"><b>💬 ${n.cm}</b> REPLIES</div>
-                        </div>
-                        <a href="${n.l}" target="_blank" class="text-[10px] text-gray-600 font-bold uppercase hover:text-blue-500">Source ↗</a>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function openModal(i) {
-        const n = intelList[i];
-        document.getElementById('modal-lang-mount').appendChild(document.getElementById('google_translate_element'));
-        document.getElementById('modal-content').innerHTML = `<h2 class="text-3xl font-bold text-white mb-6 uppercase italic">${n.t}</h2><p class="text-gray-400 italic border-l-4 border-accent pl-6 bg-white/5 p-6 rounded-r-lg">Data secured. Directing to official broadcast...</p>`;
-        document.getElementById('detail-overlay').style.display = 'block';
-    }
-
-    function closeModal() {
-        document.getElementById('lang-host').appendChild(document.getElementById('google_translate_element'));
-        document.getElementById('detail-overlay').style.display = 'none';
-    }
-
-    fetchWithRetry();
-</script>
-</body>
-</html>
