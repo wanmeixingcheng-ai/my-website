@@ -3,168 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOTYO - GLOBAL MONITOR PRO</title>
+    <title>KOTYO MONITOR - INTERACTIVE TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; }
         
-        /* 1. 顶部红色条 */
-        .ticker-bar { background: var(--accent); color: white; height: 32px; line-height: 32px; overflow: hidden; white-space: nowrap; font-size: 13px; font-weight: bold; }
+        /* 顶部警戒条 */
+        .ticker-bar { background: var(--accent); color: white; height: 30px; line-height: 30px; overflow: hidden; white-space: nowrap; font-size: 12px; font-weight: bold; }
         .ticker-move { display: inline-block; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
-        /* 2. 新闻卡片 */
-        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 6px; margin-bottom: 25px; }
-        .news-content { padding: 20px; border-left: 4px solid var(--accent); }
-        .news-meta { font-size: 11px; color: #8b949e; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        /* 新闻卡片 */
+        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 6px; margin-bottom: 20px; }
+        .news-content { padding: 18px; border-left: 4px solid var(--accent); }
         
-        /* 3. 详情页弹出层 (Modal) */
-        #news-detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; backdrop-filter: blur(5px); }
-        .detail-window { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 800px; max-height: 85vh; background: var(--card); border: 1px solid #30363d; border-radius: 8px; overflow-y: auto; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        /* 详情页全屏弹窗 */
+        #detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; overflow-y: auto; }
+        .detail-modal { background: var(--card); max-width: 800px; margin: 20px auto; border-radius: 8px; border: 1px solid #30363d; display: flex; flex-direction: column; min-height: 90vh; }
 
-        /* 4. 评论区样式 */
-        .comment-section { background: #090c10; padding: 15px; border-top: 1px solid #30363d; }
-        .comment-data { font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
-        .comment-user { color: var(--blue); font-weight: bold; margin-right: 5px; }
-        .reply-btn { font-size: 11px; color: #8b949e; cursor: pointer; margin-left: 10px; }
-        .input-group { display: flex; gap: 10px; margin-top: 10px; }
-        .comment-input { flex: 1; background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 4px; }
-        .send-btn { background: var(--blue); color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        /* 详情页内的评论交互区 */
+        .comment-area { background: #090c10; padding: 25px; border-top: 1px solid #30363d; }
+        .comment-item { font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid #21262d; padding-bottom: 10px; }
+        .comment-user { color: var(--blue); font-weight: bold; margin-right: 8px; }
+        .reply-tag { font-size: 11px; color: #8b949e; cursor: pointer; margin-left: 10px; transition: color 0.2s; }
+        .reply-tag:hover { color: var(--blue); }
 
-        /* 5. 右侧地图 */
+        /* 转发按钮特效 */
+        .action-btn { font-size: 11px; font-weight: bold; color: #8b949e; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .action-btn:hover { color: white; }
+        .action-btn.active { color: #238636; }
+
+        /* 输入框组合 */
+        .input-box-group { display: flex; gap: 10px; margin-top: 15px; background: #0d1117; padding: 10px; border-radius: 6px; border: 1px solid #30363d; }
+        .terminal-input { flex: 1; background: transparent; border: none; color: white; outline: none; font-size: 14px; }
+        .terminal-send { background: var(--blue); color: white; padding: 5px 15px; border-radius: 4px; font-weight: bold; font-size: 12px; cursor: pointer; }
+
+        /* 侧边栏 */
         .sidebar-card { background: var(--card); border: 1px solid #30363d; border-radius: 6px; padding: 15px; margin-bottom: 20px; }
-        .map-box { border: 1px dashed #30363d; background: #0d1117; height: 180px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .scan-line { position: absolute; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: scan 4s linear infinite; }
+        .map-box { border: 1px dashed #30363d; background: #0d1117; height: 160px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .scan { position: absolute; width: 100%; height: 2px; background: var(--accent); animation: scan 4s linear infinite; }
         @keyframes scan { from { top: 0; } to { top: 100%; } }
-
-        .source-link { color: var(--blue); text-decoration: underline; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div class="ticker-bar"><div class="ticker-move">[URGENT] SIGNAL ACQUIRED: GLOBAL MONITORING ACTIVE... DATA ENCRYPTED...</div></div>
+<div class="ticker-bar"><div class="ticker-move">[ENCRYPTED] FEED ACTIVE // INTERACTIVE TERMINAL READY // SELECT INTEL TO COMMENCE DISCUSSION...</div></div>
 
-    <div class="max-w-[1400px] mx-auto p-6">
-        <header class="flex justify-between items-center mb-8">
-            <h1 class="text-2xl font-black italic tracking-tighter uppercase">KOTYO <span class="text-[#f85149]">MONITOR</span></h1>
-            <div id="google_translate_element"></div>
-        </header>
+<div class="max-w-7xl mx-auto p-6">
+    <header class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-black italic tracking-tighter uppercase">KOTYO <span class="text-[#f85149]">MONITOR</span></h1>
+        <div id="google_translate_element"></div>
+    </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-8">
-                <h2 class="text-xl font-bold mb-6">🔥 24H Global Intel Feed</h2>
-                <div id="news-feed" class="space-y-6"></div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-8">
+            <h2 class="text-xl font-bold mb-6">🔥 24H Global Intel Feed</h2>
+            <div id="news-container" class="space-y-4">
+                <div class="p-20 text-center animate-pulse text-gray-600 font-mono">INITIALIZING TERMINAL...</div>
             </div>
+        </div>
 
-            <div class="lg:col-span-4">
-                <div class="sidebar-card"><h3 class="font-bold mb-4 text-xs uppercase tracking-widest text-gray-500">Global Stats</h3><div class="text-xs space-y-2 font-mono"><div class="flex justify-between"><span>Active Sources</span><span class="text-gray-400">512</span></div><div class="flex justify-between border-t border-gray-800 pt-2 font-bold text-red-500"><span>Threat Level</span><span>HIGH</span></div></div></div>
-                <div class="sidebar-card"><h3 class="font-bold mb-4 text-xs uppercase tracking-widest text-gray-500">Situational Map</h3><div class="map-box"><div class="scan-line"></div><span class="text-[10px] text-gray-700 font-mono">Satellite Feed Active</span></div></div>
+        <div class="lg:col-span-4">
+            <div class="sidebar-card">
+                <h3 class="font-bold mb-4 text-xs uppercase text-gray-500">System Info</h3>
+                <div class="text-xs space-y-2 font-mono">
+                    <div class="flex justify-between"><span>Interactive Mode</span><span class="text-green-500">ENABLED</span></div>
+                    <div class="flex justify-between text-red-500 font-bold border-t border-gray-800 pt-2"><span>Threat Level</span><span>HIGH</span></div>
+                </div>
+            </div>
+            <div class="sidebar-card">
+                <h3 class="font-bold mb-4 text-xs uppercase text-gray-500">Situational Map</h3>
+                <div class="map-box"><div class="scan"></div><span class="text-[10px] text-gray-700 font-mono">GEO-SCANNING...</span></div>
             </div>
         </div>
     </div>
+</div>
 
-    <div id="news-detail-overlay" onclick="closeDetail(event)">
-        <div class="detail-window" onclick="event.stopPropagation()">
-            <div class="p-6">
-                <button onclick="closeDetail()" class="text-gray-500 hover:text-white mb-4">✕ Close Window</button>
-                <div id="detail-body"></div>
+<div id="detail-overlay">
+    <div class="detail-modal">
+        <div class="p-8 flex-1">
+            <div class="flex justify-between mb-6">
+                <button onclick="closeModal()" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-400 uppercase">← Return to Stream</button>
+                <div id="source-link-container"></div>
             </div>
-            <div id="detail-comments" class="comment-section"></div>
-        </div>
-    </div>
-
-    <script type="text/javascript">
-        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'auto'}, 'google_translate_element'); }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-    <script>
-        let allNewsData = [];
-
-        async function fetchNews() {
-            const container = document.getElementById('news-feed');
-            const rssUrl = encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en');
-            try {
-                const res = await fetch(`https://api.allorigins.win/get?url=${rssUrl}`);
-                const data = await res.json();
-                const items = new DOMParser().parseFromString(data.contents, "text/xml").querySelectorAll("item");
-                
-                container.innerHTML = '';
-                allNewsData = Array.from(items).slice(0, 10);
-
-                allNewsData.forEach((item, i) => {
-                    const sourceName = item.querySelector("source")?.textContent || 'Reuters';
-                    const sourceLink = item.querySelector("link").textContent;
-                    const div = document.createElement('div');
-                    div.className = "news-item";
-                    div.innerHTML = `
-                        <div class="news-content">
-                            <div class="news-meta">
-                                <span>${Math.floor(Math.random()*60)} mins ago | ${sourceName}</span>
-                                <span class="lang-tag">RAW</span>
-                            </div>
-                            <p onclick="openDetail(${i})" class="text-[17px] font-bold text-white cursor-pointer hover:text-[#58a6ff] transition-colors">${item.querySelector("title").textContent}</p>
-                            <div class="flex justify-between items-center mt-4">
-                                <div class="flex gap-4 text-[11px] font-bold text-gray-500 uppercase">
-                                    <span>💬 ${Math.floor(Math.random()*100)} Comments</span>
-                                    <span>🔄 ${Math.floor(Math.random()*50)} Retweets</span>
-                                </div>
-                                <a href="${sourceLink}" target="_blank" class="source-link">Source: ${sourceName} ↗</a>
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-            } catch (e) { console.log(e); }
-        }
-
-        function openDetail(index) {
-            const item = allNewsData[index];
-            const overlay = document.getElementById('news-detail-overlay');
-            const body = document.getElementById('detail-body');
-            const comments = document.getElementById('detail-comments');
             
-            body.innerHTML = `
-                <div class="mb-4">
-                    <span class="text-[#f85149] text-xs font-bold uppercase tracking-widest">/ Detailed Intelligence Feed</span>
-                    <h2 class="text-2xl font-bold text-white mt-2">${item.querySelector("title").textContent}</h2>
-                    <p class="text-gray-400 text-sm mt-4">新闻内容摘要加载中... 目前 RSS 仅提供标题，建议通过下方来源链接查看完整图文。</p>
-                    <div class="mt-6 border-t border-gray-800 pt-4">
-                        <a href="${item.querySelector("link").textContent}" target="_blank" class="bg-[#1f2937] text-white px-4 py-2 rounded text-xs font-bold hover:bg-gray-700 transition-all">
-                            GO TO ORIGINAL SOURCE WEBSITE ↗
-                        </a>
+            <div id="modal-content-area">
+                </div>
+
+            <div class="mt-6 flex gap-6">
+                <div class="action-btn" id="retweet-btn" onclick="simulateRetweet()">
+                    <span>🔄</span> <span id="retweet-count">Retweet</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comment-area">
+            <h4 class="text-xs font-bold mb-4 uppercase text-gray-500 tracking-widest">Global Discussion</h4>
+            <div id="modal-comments-list" class="max-h-64 overflow-y-auto mb-4 pr-2">
+                <div class="comment-item">
+                    <span class="comment-user">System:</span> 讨论频道已开启。
+                </div>
+            </div>
+            
+            <div class="input-box-group">
+                <input type="text" id="modal-comment-input" class="terminal-input" placeholder="撰写评论或回复 (点击用户名可回复)...">
+                <button onclick="postModalComment()" class="terminal-send">SEND</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'auto'}, 'google_translate_element'); }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+    let currentNewsList = [];
+
+    async function fetchNews() {
+        const container = document.getElementById('news-container');
+        const api = `https://api.allorigins.win/get?url=${encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en')}`;
+        
+        try {
+            const res = await fetch(api);
+            const data = await res.json();
+            const xml = new DOMParser().parseFromString(data.contents, "text/xml");
+            const items = xml.querySelectorAll("item");
+            
+            container.innerHTML = '';
+            currentNewsList = Array.from(items).slice(0, 15).map(item => ({
+                title: item.querySelector("title").textContent,
+                source: item.querySelector("source")?.textContent || "Source",
+                link: item.querySelector("link").textContent,
+                desc: item.querySelector("description")?.textContent || "",
+                rtCount: Math.floor(Math.random() * 50) + 5
+            }));
+
+            currentNewsList.forEach((news, i) => {
+                const div = document.createElement('div');
+                div.className = "news-item";
+                div.innerHTML = `
+                    <div class="news-content">
+                        <div class="news-meta mb-2 flex justify-between uppercase font-bold text-[10px] text-gray-500">
+                            <span>INTEL SOURCE: ${news.source}</span>
+                            <span>LIVE FEED</span>
+                        </div>
+                        <p onclick="showDetail(${i})" class="text-lg font-bold text-white cursor-pointer hover:text-blue-400 leading-tight">${news.title}</p>
+                        <div class="flex justify-between mt-4">
+                             <div class="flex gap-4 text-[10px] font-bold text-gray-500">
+                                <span>💬 CLICK TO COMMENT</span>
+                                <span>🔄 ${news.rtCount} RETWEETS</span>
+                             </div>
+                             <a href="${news.link}" target="_blank" class="text-blue-500 text-[10px] font-bold">SOURCE ↗</a>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+                container.appendChild(div);
+            });
+        } catch (e) { setTimeout(fetchNews, 5000); }
+    }
 
-            comments.innerHTML = `
-                <div class="comment-list" id="detail-list">
-                    <div class="comment-data"><span class="comment-user">System:</span> 详情页安全线路已建立。</div>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="detail-input" class="comment-input" placeholder="针对此情报发表看法...">
-                    <button class="send-btn" onclick="postDetailComment()">发送</button>
-                </div>
-            `;
-            overlay.style.display = 'block';
+    // 打开详情页
+    function showDetail(idx) {
+        const news = currentNewsList[idx];
+        const overlay = document.getElementById('detail-overlay');
+        
+        document.getElementById('source-link-container').innerHTML = `
+            <a href="${news.link}" target="_blank" class="text-[10px] text-blue-500 font-bold border border-blue-900 px-2 py-1 rounded">SOURCE WEBSITE ↗</a>
+        `;
+        
+        document.getElementById('modal-content-area').innerHTML = `
+            <h2 class="text-2xl font-bold text-white mb-6 leading-tight">${news.title}</h2>
+            <div class="bg-gray-900/50 p-4 border-l-2 border-gray-700 italic text-sm text-gray-400">
+                ${news.desc}
+            </div>
+        `;
+        
+        document.getElementById('retweet-count').innerText = `${news.rtCount} Retweets`;
+        
+        // 初始化评论列表
+        document.getElementById('modal-comments-list').innerHTML = `
+            <div class="comment-item">
+                <span class="comment-user">Intelligence_Bot:</span> 监控已到位。您可以回复他人或发布新评论。
+                <span class="reply-tag" onclick="replyToUser('Intelligence_Bot')">回复</span>
+            </div>
+        `;
+
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 核心功能：回复某人
+    function replyToUser(username) {
+        const input = document.getElementById('modal-comment-input');
+        input.value = `@${username} `;
+        input.focus();
+    }
+
+    // 核心功能：发布评论
+    function postModalComment() {
+        const input = document.getElementById('modal-comment-input');
+        const list = document.getElementById('modal-comments-list');
+        if(!input.value.trim()) return;
+
+        const div = document.createElement('div');
+        div.className = 'comment-item';
+        div.innerHTML = `
+            <span class="comment-user">游客:</span>${input.value}
+            <span class="reply-tag" onclick="replyToUser('游客')">回复</span>
+        `;
+        list.appendChild(div);
+        input.value = '';
+        list.scrollTop = list.scrollHeight;
+    }
+
+    // 转发功能模拟
+    function simulateRetweet() {
+        const btn = document.getElementById('retweet-btn');
+        btn.classList.toggle('active');
+        const countSpan = document.getElementById('retweet-count');
+        let currentCount = parseInt(countSpan.innerText);
+        if(btn.classList.contains('active')) {
+            countSpan.innerText = (currentCount + 1) + " Retweets";
+            alert("✅ 情报已成功转发至全球网络。");
+        } else {
+            countSpan.innerText = (currentCount - 1) + " Retweets";
         }
+    }
 
-        function closeDetail() { document.getElementById('news-detail-overlay').style.display = 'none'; }
+    function closeModal() {
+        document.getElementById('detail-overlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 
-        function postDetailComment() {
-            const input = document.getElementById('detail-input');
-            const list = document.getElementById('detail-list');
-            if(input.value.trim()==="") return;
-            const div = document.createElement('div');
-            div.className = 'comment-data';
-            div.innerHTML = `<span class="comment-user">游客:</span>${input.value}`;
-            list.appendChild(div);
-            input.value = "";
-        }
+    window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
 
-        fetchNews();
-        setInterval(fetchNews, 300000);
-    </script>
+    fetchNews();
+    setInterval(fetchNews, 300000);
+</script>
+
 </body>
 </html>
