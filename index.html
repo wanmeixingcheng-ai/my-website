@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOTYO MONITOR - FINAL ARCHITECTURE</title>
+    <title>KOTYO MONITOR - FULL INTERACTIVE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; }
@@ -14,89 +14,98 @@
         .ticker-move { display: inline-block; animation: scroll 30s linear infinite; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
-        /* --- 核心：竖排翻译组件样式 (适配 999.png) --- */
+        /* --- 竖排翻译组件 (针对 999.png 优化) --- */
         .vertical-lang-box {
-            width: 100px;
+            width: 110px;
             background: #1f2937;
             border: 1px solid #30363d;
-            padding: 10px 5px;
+            padding: 8px 4px;
             border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-        /* 隐藏 Google 默认文字 */
         .goog-te-gadget { color: transparent !important; font-size: 0 !important; }
         .goog-te-gadget span { display: none !important; }
-        /* 强制下拉框样式 - 竖向窄条 */
         .goog-te-combo {
             background: #0d1117 !important;
             color: var(--blue) !important;
             border: 1px solid #444 !important;
-            padding: 5px !important;
-            width: 85px !important;
+            padding: 4px !important;
+            width: 100% !important;
             font-size: 12px !important;
             border-radius: 2px;
             cursor: pointer;
         }
-        /* 移除顶部翻译横条 */
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; position: static !important; }
 
-        /* 新闻与地图卡片 */
+        /* 新闻项 */
         .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 4px; margin-bottom: 12px; }
         .news-content { padding: 15px; border-left: 4px solid var(--accent); }
         
-        /* 地图容器样式 */
-        #map-frame {
+        /* 地图 */
+        #map-container {
             width: 100%;
-            height: 300px;
+            height: 200px;
             background: #090c10;
             border: 1px solid #30363d;
-            border-radius: 4px;
-            filter: grayscale(0.8) invert(0.9) hue-rotate(180deg); /* 科技感滤镜 */
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .map-scan { position: absolute; width: 100%; height: 2px; background: var(--accent); animation: scan 3s linear infinite; opacity: 0.5; }
+        @keyframes scan { from { top: 0; } to { top: 100%; } }
 
-        /* 弹窗样式 */
+        /* 详情弹窗与互动区 */
         #detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; }
-        .detail-modal { background: var(--card); max-width: 800px; margin: 2% auto; height: 90vh; border: 1px solid #444; display: flex; flex-direction: column; }
+        .detail-modal { background: var(--card); max-width: 850px; margin: 2% auto; height: 92vh; border: 1px solid #444; display: flex; flex-direction: column; }
+        
+        .comment-section { background: #090c10; padding: 20px; border-top: 1px solid #30363d; }
+        .comment-list { max-h: 150px; overflow-y: auto; font-size: 12px; margin-bottom: 15px; }
+        .comment-user { color: var(--blue); font-weight: bold; margin-right: 5px; }
+        .reply-tag { color: #8b949e; cursor: pointer; font-size: 10px; margin-left: 8px; text-transform: uppercase; font-weight: bold; }
+        .reply-tag:hover { color: white; }
+
+        .terminal-input { flex: 1; background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; font-size: 12px; outline: none; }
+        .terminal-btn { background: var(--blue); color: white; padding: 0 15px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-<div class="ticker-bar"><div class="ticker-move">[SYSTEM ONLINE] DATA FEED STABLE // MAP INTERFACE ACTIVE // LANGUAGE MODULE v7.0 SECURED...</div></div>
+<div class="ticker-bar"><div class="ticker-move">[ENCRYPTED] GLOBAL INTERACTIVE TERMINAL v8.0 // ALL NODES ACTIVE // MAP & CHAT READY</div></div>
 
 <div class="max-w-7xl mx-auto p-4">
     <header class="flex justify-between items-start mb-6 border-b border-gray-800 pb-4">
         <div>
             <h1 class="text-2xl font-black italic tracking-tighter uppercase">KOTYO <span class="text-[#f85149]">MONITOR</span></h1>
-            <p class="text-[9px] text-gray-500 font-bold tracking-widest mt-1">GLOBAL INTELLIGENCE v4.2</p>
+            <p class="text-[9px] text-gray-600 font-bold uppercase tracking-widest mt-1">Satellite Intel Feed</p>
         </div>
         
-        <div class="vertical-lang-box">
+        <div class="vertical-lang-box" id="lang-parent">
             <div id="google_translate_element"></div>
         </div>
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-8">
-            <h2 class="text-lg font-bold mb-4 flex items-center gap-2">📡 LIVE INTEL FEED</h2>
-            <div id="news-container" class="space-y-4">
-                <div class="p-10 text-center font-mono text-gray-600 animate-pulse">CONNECTING TO SATELLITE...</div>
-            </div>
+            <h2 class="text-lg font-bold mb-4 flex items-center gap-2">📡 LIVE FEED</h2>
+            <div id="news-container" class="space-y-4"></div>
         </div>
 
         <div class="lg:col-span-4">
             <div class="bg-[#161b22] border border-[#30363d] p-4 rounded mb-6">
-                <h3 class="text-[10px] text-gray-500 font-bold mb-3 uppercase tracking-widest">Global Location Map</h3>
-                <iframe id="map-frame" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1000000!2d0!3d0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1700000000000" allowfullscreen="" loading="lazy"></iframe>
+                <h3 class="text-[10px] text-gray-500 font-bold mb-3 uppercase tracking-widest">Global Scan Map</h3>
+                <div id="map-container">
+                    <div class="map-scan"></div>
+                    <span class="text-[10px] text-gray-600">SATELLITE POSITIONING...</span>
+                </div>
             </div>
 
             <div class="bg-[#161b22] border border-[#30363d] p-4 rounded">
-                <h3 class="text-[10px] text-gray-500 font-bold mb-3 uppercase tracking-widest">System Metrics</h3>
-                <div class="text-xs font-mono space-y-2">
-                    <div class="flex justify-between"><span>NODE STATUS</span><span class="text-green-500">ENCRYPTED</span></div>
-                    <div class="flex justify-between text-red-500 font-bold"><span>THREAT LEVEL</span><span>ELEVATED</span></div>
+                <h3 class="text-[10px] text-gray-500 font-bold mb-3 uppercase tracking-widest">Node Metrics</h3>
+                <div class="text-xs font-mono space-y-2 text-gray-400">
+                    <div class="flex justify-between"><span>LINK</span><span class="text-green-500">STABLE</span></div>
+                    <div class="flex justify-between border-t border-gray-800 pt-2 font-bold text-red-500"><span>LEVEL</span><span>CRITICAL</span></div>
                 </div>
             </div>
         </div>
@@ -106,74 +115,22 @@
 <div id="detail-overlay">
     <div class="detail-modal">
         <div class="p-4 bg-black/40 flex justify-between items-center border-b border-gray-800">
-            <button onclick="closeModal()" class="text-[10px] text-blue-500 font-bold">← EXIT_TERMINAL</button>
-            <div id="modal-lang-mount"></div> </div>
-        <div class="p-8 flex-1 overflow-y-auto" id="modal-content"></div>
-    </div>
-</div>
-
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'auto',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-            autoDisplay: false
-        }, 'google_translate_element');
-    }
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-<script>
-    let newsList = [];
-    const tEl = document.getElementById('google_translate_element');
-
-    async function getIntel() {
-        const api = `https://api.allorigins.win/get?url=${encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en')}`;
-        try {
-            const r = await fetch(api);
-            const d = await r.json();
-            const items = new DOMParser().parseFromString(d.contents, "text/xml").querySelectorAll("item");
+            <button onclick="closeModal()" class="text-[10px] text-blue-500 font-bold">← BACK_TO_FEED</button>
+            <div id="modal-lang-mount"></div>
+        </div>
+        
+        <div class="p-8 flex-1 overflow-y-auto">
+            <div id="modal-content"></div>
             
-            newsList = Array.from(items).slice(0, 12).map(i => ({
-                t: i.querySelector("title").textContent,
-                s: i.querySelector("source")?.textContent || "INTEL",
-                l: i.querySelector("link").textContent,
-                d: i.querySelector("description")?.textContent || "Analysis incomplete."
-            }));
-
-            document.getElementById('news-container').innerHTML = newsList.map((n, i) => `
-                <div class="news-item">
-                    <div class="news-content">
-                        <div class="text-[9px] text-gray-600 font-bold mb-1 uppercase">Origin: ${n.s}</div>
-                        <p onclick="openModal(${i})" class="text-md font-bold text-white cursor-pointer hover:text-blue-400">${n.t}</p>
-                        <div class="flex justify-between mt-3 text-[9px] text-gray-700">
-                            <span>📡 SATELLITE LINK ACTIVE</span>
-                            <a href="${n.l}" target="_blank" class="text-blue-900 hover:text-blue-500">RAW_SOURCE ↗</a>
-                        </div>
-                    </div>
+            <div class="mt-8 border-t border-gray-800 pt-4 flex gap-6">
+                <div class="text-[11px] font-bold text-gray-500 flex items-center gap-2 cursor-pointer hover:text-white" onclick="doRT()">
+                    🔄 <span id="modal-rt-count">0</span> RETWEETS
                 </div>
-            `).join('');
-        } catch(e) { console.error("Link failed"); }
-    }
+                <div class="text-[11px] font-bold text-gray-500">💬 DISCUSSIONS OPEN</div>
+            </div>
+        </div>
 
-    function openModal(i) {
-        const n = newsList[i];
-        document.getElementById('modal-lang-mount').appendChild(tEl);
-        document.getElementById('modal-content').innerHTML = `
-            <h2 class="text-xl font-bold mb-4 text-white">${n.t}</h2>
-            <div class="bg-black/20 p-4 border-l border-gray-700 text-gray-400 text-sm italic">${n.d}</div>
-        `;
-        document.getElementById('detail-overlay').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        document.querySelector('.vertical-lang-box').appendChild(tEl);
-        document.getElementById('detail-overlay').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    getIntel();
-</script>
-</body>
-</html>
+        <div class="comment-section">
+            <div id="modal-comments" class="comment-list font-mono"></div>
+            <div class="flex gap-2">
+                <input type="text" id="com-input
