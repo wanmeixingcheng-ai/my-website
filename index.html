@@ -22,14 +22,15 @@
         </div>
 
     <script>
-        /// ======= 混淆处理后的连接信息 =======
+        // ======= 尝试以下配置 =======
         const pA = "patR3J9RQjyCdCKcN";
         const pB = "c12832bf555d070c5b7c26130ada69e2c8b29b1c3ed990e176745682313fdc1b";
         
         const TOKEN = pA + "." + pB; 
         const BASE_ID = "app1bKpTNxXpFD9jK";
-        const TABLE_NAME = "Table"; 
-        // ===================================
+        
+        // 如果你的表名带空格，请一定要写上空格
+        const TABLE_NAME = "Table 1";
 
         async function syncData() {
             const status = document.getElementById('status');
@@ -73,3 +74,4 @@
     </script>
 </body>
 </html>
+
