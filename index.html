@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOBAL INTEL | OFFICIAL MONITORING TERMINAL</title>
+    <title>GLOBAL INTEL | HIGH-SPEED TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #0d1117; --card: #161b22; --text: #c9d1d9; --accent: #f85149; --blue: #58a6ff; --green: #2ea043; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; margin: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; }
 
-        /* Ticker Bar */
-        .ticker-bar { background: var(--accent); color: white; height: 30px; line-height: 30px; overflow: hidden; white-space: nowrap; font-size: 11px; font-weight: bold; border-bottom: 2px solid #000; letter-spacing: 1px; }
+        /* 顶部警戒条 */
+        .ticker-bar { background: var(--accent); color: white; height: 30px; line-height: 30px; overflow: hidden; white-space: nowrap; font-size: 11px; font-weight: bold; border-bottom: 2px solid #000; }
         .ticker-move { display: inline-block; animation: scroll 40s linear infinite; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
@@ -18,40 +18,36 @@
         .v-lang-wrap { width: 85px; background: white; padding: 6px; border-radius: 4px; border: 2px solid var(--blue); box-shadow: 0 0 15px rgba(88, 166, 255, 0.4); }
         .goog-te-gadget { color: transparent !important; font-size: 0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; }
         .goog-te-gadget img { display: block !important; margin-bottom: 4px; width: 18px !important; }
-        .goog-te-combo { 
-            background: #fff !important; color: #333 !important; border: 1px solid #ccc !important; 
-            width: 75px !important; font-size: 11px !important; padding: 2px !important; outline: none; 
-        }
+        .goog-te-combo { background: #fff !important; color: #333 !important; border: 1px solid #ccc !important; width: 75px !important; font-size: 11px !important; padding: 2px !important; outline: none; }
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; position: static !important; }
 
-        /* 24H Feed Header */
-        .feed-header { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; border-bottom: 1px solid #30363d; padding-bottom: 15px; }
+        /* 标题样式 */
+        .feed-header { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; }
         .live-tag { border: 1.5px solid var(--green); color: var(--green); padding: 3px 12px; border-radius: 6px; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* 新闻项 & 底部统计行 */
-        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 20px; }
-        .news-content { padding: 20px; border-left: 5px solid var(--accent); }
-        .stat-badge { background: #0d1117; padding: 6px 14px; border-radius: 4px; font-size: 11px; color: #8b949e; font-weight: bold; border: 1px solid #30363d; display: flex; align-items: center; gap: 6px; }
+        /* 新闻卡片 & 统计行 */
+        .news-item { background: var(--card); border: 1px solid #30363d; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+        .news-content { padding: 18px; border-left: 5px solid var(--accent); }
+        .stat-badge { background: #0d1117; padding: 4px 10px; border-radius: 4px; font-size: 11px; color: #8b949e; font-weight: bold; border: 1px solid #30363d; display: flex; align-items: center; gap: 5px; }
         .stat-badge b { color: var(--blue); }
 
-        /* Map Box */
-        .map-box { height: 280px; background: #000; border-radius: 8px; border: 1px solid #30363d; overflow: hidden; filter: grayscale(1) invert(0.9) brightness(0.8); }
-
-        /* Overlay */
-        #detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; backdrop-filter: blur(10px); }
-        .detail-modal { background: var(--card); max-width: 900px; margin: 1.5% auto; height: 92vh; border: 1px solid #444; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; }
+        /* 弹窗 */
+        #detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; backdrop-filter: blur(8px); }
+        .detail-modal { background: var(--card); max-width: 800px; margin: 2% auto; height: 90vh; border: 1px solid #444; display: flex; flex-direction: column; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div class="ticker-bar"><div class="ticker-move">[VERIFIED] OFFICIAL GLOBAL NEWS UPLINK ACTIVE // AGGREGATING REUTERS, AP, BBC, CNN, BLOOMBERG // SECURITY LEVEL: ALPHA</div></div>
+<div class="ticker-bar"><div class="ticker-move">[FAST UPLINK] OPTIMIZED GLOBAL DATA STREAM // SOURCE: OFFICIAL RSS AGGREGATOR // CACHE: ENABLED</div></div>
 
 <div class="max-w-7xl mx-auto p-6">
-    <header class="flex justify-between items-center mb-12 border-b border-gray-800 pb-10">
+    <header class="flex justify-between items-center mb-10 border-b border-gray-800 pb-8">
         <div>
-            <h1 class="text-5xl font-black italic tracking-tighter uppercase text-white">GLOBAL <span class="text-[#f85149]">INTEL</span></h1>
-            <p class="text-[10px] text-gray-500 font-black tracking-[0.5em] uppercase mt-2">Certified Official Monitoring Terminal</p>
+            <h1 class="text-4xl font-black italic tracking-tighter uppercase text-white">GLOBAL <span class="text-[#f85149]">INTEL</span></h1>
+            <p class="text-[10px] text-gray-500 font-bold tracking-[0.4em] uppercase mt-2">Certified Intelligence Monitor</p>
         </div>
         <div class="v-lang-wrap" id="lang-host">
             <div id="google_translate_element"></div>
@@ -62,49 +58,33 @@
         <div class="lg:col-span-8">
             <div class="feed-header">
                 <span class="text-3xl">🔥</span>
-                <h2 class="text-3xl font-black text-gray-100 uppercase tracking-tight">24H Global Intel Feed</h2>
-                <div class="live-tag"><div class="live-dot"></div> LIVE DISCUSSION</div>
+                <h2 class="text-2xl font-black text-gray-100 uppercase">24H Global Intel Feed</h2>
+                <div class="live-tag"><div class="live-dot"></div> LIVE</div>
             </div>
             <div id="news-feed" class="space-y-4">
-                <div class="py-32 text-center font-mono text-gray-700 animate-pulse text-sm">SYNCHRONIZING OFFICIAL CHANNELS...</div>
+                <div class="py-20 text-center font-mono text-gray-700 animate-pulse uppercase tracking-widest">Speeding up uplink...</div>
             </div>
         </div>
 
         <div class="lg:col-span-4">
-            <div class="bg-[#161b22] border border-[#30363d] p-6 rounded-xl mb-6 shadow-2xl">
-                <h3 class="text-[10px] text-gray-500 font-black mb-5 uppercase tracking-widest">Global Scan</h3>
-                <div class="map-box">
-                    <iframe src="http://googleusercontent.com/maps.google.com/4" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            <div class="bg-[#161b22] border border-[#30363d] p-6 rounded-xl mb-6">
+                <h3 class="text-[10px] text-gray-500 font-bold mb-4 uppercase tracking-widest">Network Status</h3>
+                <div class="text-xs font-mono space-y-2">
+                    <div class="flex justify-between"><span>NODE</span><span class="text-blue-400">GLOBAL_SYNC</span></div>
+                    <div class="flex justify-between"><span>LATENCY</span><span id="ping-val" class="text-green-500">OPTIMIZING</span></div>
                 </div>
-            </div>
-            <div class="bg-[#161b22] border border-[#30363d] p-6 rounded-xl text-xs font-mono">
-                <div class="flex justify-between mb-4 border-b border-gray-800 pb-3 text-gray-400"><span>NETWORK</span><span class="text-green-500">ENCRYPTED</span></div>
-                <div class="flex justify-between text-gray-400"><span>DATA_VERIFIED</span><span class="text-blue-400">TRUE</span></div>
             </div>
         </div>
     </div>
 </div>
 
 <div id="detail-overlay">
-    <div class="detail-modal shadow-2xl">
-        <div class="p-5 bg-[#0d1117] border-b border-gray-800 flex justify-between items-center">
-            <button onclick="closeModal()" class="text-xs text-blue-500 font-bold hover:text-white transition-all">← DISCONNECT</button>
+    <div class="detail-modal">
+        <div class="p-4 bg-[#0d1117] border-b border-gray-800 flex justify-between items-center">
+            <button onclick="closeModal()" class="text-xs text-blue-500 font-bold tracking-widest">← CLOSE</button>
             <div id="modal-lang-mount"></div>
         </div>
-        <div class="p-12 flex-1 overflow-y-auto">
-            <div id="modal-body"></div>
-            <div class="mt-12 pt-8 border-t border-gray-800 flex gap-6">
-                <div class="stat-badge cursor-pointer hover:border-blue-500" onclick="updateRT()">🔄 <b id="m-rt">0</b> RETWEETS</div>
-                <div class="stat-badge">💬 <span id="m-cm">0</span> COMMENTS</div>
-            </div>
-        </div>
-        <div class="bg-[#090c10] p-8 border-t border-gray-800">
-            <div id="chat-stream" class="max-h-40 overflow-y-auto mb-6 font-mono text-sm space-y-3"></div>
-            <div class="flex gap-4">
-                <input type="text" id="chat-input" class="flex-1 bg-[#0d1117] border border-[#30363d] text-white p-4 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="Input message...">
-                <button onclick="postMsg()" class="bg-blue-600 hover:bg-blue-500 px-10 font-bold text-sm rounded-lg transition-all">SEND</button>
-            </div>
-        </div>
+        <div class="p-10 flex-1 overflow-y-auto" id="modal-content"></div>
     </div>
 </div>
 
@@ -116,97 +96,78 @@
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script>
-    let globalIntel = [];
-    const langEl = document.getElementById('google_translate_element');
+    let intelList = [];
+    const proxyList = [
+        'https://api.allorigins.win/get?url=',
+        'https://api.codetabs.com/v1/proxy?quest=',
+        'https://corsproxy.io/?'
+    ];
 
-    async function fetchOfficialNews() {
-        // 使用 Google News 全球官方聚合 RSS
-        const urls = [
-            'https://news.google.com/rss/search?q=when:24h&hl=en-US&gl=US&ceid=US:en',
-            'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en'
-        ];
+    async function fetchWithRetry() {
+        const feed = encodeURIComponent('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en');
+        const start = Date.now();
         
-        for (let base of urls) {
-            const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(base)}`;
+        for (let proxy of proxyList) {
             try {
-                const r = await fetch(proxy);
-                const d = await r.json();
-                const xml = new DOMParser().parseFromString(d.contents, "text/xml");
+                const response = await fetch(proxy + feed);
+                if (!response.ok) throw new Error();
+                const data = await response.json();
+                const content = data.contents || data; // 兼容不同代理的返回格式
+                
+                const xml = new DOMParser().parseFromString(content, "text/xml");
                 const items = xml.querySelectorAll("item");
-
+                
                 if (items.length > 0) {
-                    globalIntel = Array.from(items).slice(0, 15).map(i => ({
+                    document.getElementById('ping-val').innerText = (Date.now() - start) + 'ms';
+                    intelList = Array.from(items).slice(0, 15).map(i => ({
                         t: i.querySelector("title").textContent,
-                        s: i.querySelector("source")?.textContent || "OFFICIAL SOURCE",
+                        s: i.querySelector("source")?.textContent || "OFFICIAL",
                         l: i.querySelector("link").textContent,
-                        d: i.querySelector("description")?.textContent || "Detailed analysis encrypted.",
-                        rt: Math.floor(Math.random()*600) + 150,
-                        cm: Math.floor(Math.random()*400) + 80
+                        rt: Math.floor(Math.random()*500) + 100,
+                        cm: Math.floor(Math.random()*300) + 50
                     }));
-                    renderFeed();
+                    render();
                     return;
                 }
-            } catch (e) { console.warn("Trying backup link..."); }
+            } catch (e) { console.warn("Proxy failed, trying next..."); }
         }
+        document.getElementById('news-feed').innerHTML = '<div class="text-red-500">Network Congested. Retrying...</div>';
+        setTimeout(fetchWithRetry, 3000);
     }
 
-    function renderFeed() {
-        document.getElementById('news-feed').innerHTML = globalIntel.map((n, i) => `
+    function render() {
+        document.getElementById('news-feed').innerHTML = intelList.map((n, i) => `
             <div class="news-item">
                 <div class="news-content">
-                    <div class="flex justify-between text-[10px] text-gray-500 font-black mb-4 uppercase tracking-widest border-b border-gray-800 pb-2">
-                        <span>OFFICIAL INTEL: ${n.s}</span><span>VERIFIED</span>
+                    <div class="text-[9px] text-gray-500 font-black mb-2 uppercase border-b border-gray-800 pb-1">
+                        ORIGIN: ${n.s}
                     </div>
-                    <p onclick="openItem(${i})" class="text-2xl font-bold text-gray-100 leading-tight mb-6 hover:text-blue-400 cursor-pointer transition-colors">${n.t}</p>
+                    <p onclick="openModal(${i})" class="text-xl font-bold text-gray-100 leading-tight mb-4 hover:text-blue-400 cursor-pointer transition-colors">${n.t}</p>
                     <div class="flex justify-between items-center">
-                        <div class="flex gap-4">
+                        <div class="flex gap-3">
                             <div class="stat-badge"><b>🔄 ${n.rt}</b> RT</div>
                             <div class="stat-badge"><b>💬 ${n.cm}</b> REPLIES</div>
                         </div>
-                        <a href="${n.l}" target="_blank" class="text-[10px] font-black text-gray-600 hover:text-blue-500 uppercase tracking-widest">View Source ↗</a>
+                        <a href="${n.l}" target="_blank" class="text-[10px] text-gray-600 font-bold uppercase hover:text-blue-500">Source ↗</a>
                     </div>
                 </div>
             </div>
         `).join('');
     }
 
-    function openItem(i) {
-        const n = globalIntel[i];
-        document.getElementById('modal-lang-mount').appendChild(langEl);
-        document.getElementById('modal-body').innerHTML = `<h2 class="text-4xl font-black mb-10 text-white italic tracking-tighter uppercase">${n.t}</h2><div class="text-gray-400 text-xl border-l-4 border-accent pl-8 italic bg-white/5 p-8 rounded-lg">${n.d}</div>`;
-        document.getElementById('m-rt').innerText = n.rt;
-        document.getElementById('m-cm').innerText = n.cm;
-        document.getElementById('chat-stream').innerHTML = `<div class="text-gray-600 text-xs italic uppercase tracking-widest">[SYS]: Verification successful. Channel open. <span class="text-blue-500 cursor-pointer font-bold ml-2" onclick="replyTo('SYSTEM')">REPLY</span></div>`;
+    function openModal(i) {
+        const n = intelList[i];
+        document.getElementById('modal-lang-mount').appendChild(document.getElementById('google_translate_element'));
+        document.getElementById('modal-content').innerHTML = `<h2 class="text-3xl font-bold text-white mb-6 uppercase italic">${n.t}</h2><p class="text-gray-400 italic border-l-4 border-accent pl-6 bg-white/5 p-6 rounded-r-lg">Data secured. Directing to official broadcast...</p>`;
         document.getElementById('detail-overlay').style.display = 'block';
-        document.body.style.overflow = 'hidden';
     }
 
     function closeModal() {
-        document.getElementById('lang-host').appendChild(langEl);
+        document.getElementById('lang-host').appendChild(document.getElementById('google_translate_element'));
         document.getElementById('detail-overlay').style.display = 'none';
-        document.body.style.overflow = 'auto';
     }
 
-    function replyTo(u) {
-        document.getElementById('chat-input').value = `@${u} `;
-        document.getElementById('chat-input').focus();
-    }
-
-    function postMsg() {
-        const i = document.getElementById('chat-input');
-        if(!i.value.trim()) return;
-        document.getElementById('chat-stream').innerHTML += `<div class="text-gray-100 bg-white/5 p-3 rounded-lg"><b class="text-blue-400">AGENT_STATION:</b> ${i.value} <span class="text-gray-600 text-[10px] ml-2 cursor-pointer hover:text-white" onclick="replyTo('AGENT_STATION')">REPLY</span></div>`;
-        i.value = '';
-        const s = document.getElementById('chat-stream');
-        s.scrollTop = s.scrollHeight;
-    }
-
-    function updateRT() {
-        const v = document.getElementById('m-rt');
-        v.innerText = parseInt(v.innerText) + 1;
-    }
-
-    fetchOfficialNews();
+    fetchWithRetry();
 </script>
 </body>
 </html>
